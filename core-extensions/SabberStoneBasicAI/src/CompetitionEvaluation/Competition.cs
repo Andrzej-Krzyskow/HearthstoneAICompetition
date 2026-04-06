@@ -32,26 +32,59 @@ namespace SabberStoneBasicAI.CompetitionEvaluation
 		public int ExceptionsPlayer1 { get; private set; }
 		public int ExceptionsPlayer2 { get; private set; }
 		public int GamesPlayed { get; private set; }
+		public int TurnsPlayer1ToWin { get; private set; }
+		public int TurnsPlayer1ToLose { get; private set; }
+		public int HealthDifferenceWhenP1Wins { get; private set; }
+		public int HealthDifferenceWhenP1Loses { get; private set; }
 
-		public MatchupResult(int WinsPlayer1 = 0, int WinsPlayer2 = 0, int ExceptionsPlayer1 = 0, int ExceptionsPlayer2 = 0)
+		public double AvgTurnsPlayer1ToWin => WinsPlayer1 > 0 ? (double)TurnsPlayer1ToWin / WinsPlayer1 : 0.0;
+		public double AvgTurnsPlayer1ToLose => WinsPlayer2 > 0 ? (double)TurnsPlayer1ToLose / WinsPlayer2 : 0.0;
+		public double AvgHealthDifferenceWhenP1Wins => WinsPlayer1 > 0 ? (double)HealthDifferenceWhenP1Wins / WinsPlayer1 : 0.0;
+		public double AvgHealthDifferenceWhenP1Loses => WinsPlayer2 > 0 ? (double)HealthDifferenceWhenP1Loses / WinsPlayer2 : 0.0;
+
+		public MatchupResult(
+			int WinsPlayer1 = 0,
+			int WinsPlayer2 = 0,
+			int ExceptionsPlayer1 = 0,
+			int ExceptionsPlayer2 = 0,
+			int turnsPlayer1ToWin = 0,
+			int turnsPlayer1ToLose = 0,
+			int healthDifferenceWhenP1Wins = 0,
+			int healthDifferenceWhenP1Loses = 0)
 		{
 			this.WinsPlayer1 = 0;
 			this.WinsPlayer2 = 0;
 			this.ExceptionsPlayer1 = 0;
 			this.ExceptionsPlayer2 = 0;
+			TurnsPlayer1ToWin = turnsPlayer1ToWin;
+			TurnsPlayer1ToLose = turnsPlayer1ToLose;
+			HealthDifferenceWhenP1Wins = healthDifferenceWhenP1Wins;
+			HealthDifferenceWhenP1Loses = healthDifferenceWhenP1Loses;
 			GamesPlayed = WinsPlayer1 + WinsPlayer2 + ExceptionsPlayer1 + ExceptionsPlayer2;
 		}
 
 		public MatchupResult(string[] values)
 		{
-			this.WinsPlayer1 = int.Parse(values[5]);
-			this.WinsPlayer2 = int.Parse(values[6]);
-			this.ExceptionsPlayer1 = int.Parse(values[7]);
-			this.ExceptionsPlayer2 = int.Parse(values[8]);
+			WinsPlayer1 = int.Parse(values[5]);
+			WinsPlayer2 = int.Parse(values[6]);
+			ExceptionsPlayer1 = int.Parse(values[7]);
+			ExceptionsPlayer2 = int.Parse(values[8]);
+			TurnsPlayer1ToWin = int.Parse(values[9]);
+			TurnsPlayer1ToLose = int.Parse(values[10]);
+			HealthDifferenceWhenP1Wins = int.Parse(values[11]);
+			HealthDifferenceWhenP1Loses = int.Parse(values[12]);
 			GamesPlayed = WinsPlayer1 + WinsPlayer2 + ExceptionsPlayer1 + ExceptionsPlayer2;
 		}
 
-		public void addResult(bool player1won, bool player2won, bool exceptionplayer1, bool exceptionplayer2)
+		public void addResult(
+			bool player1won,
+			bool player2won,
+			bool exceptionplayer1,
+			bool exceptionplayer2,
+			int turnsPlayer1ToWin,
+			int turnsPlayer1ToLose,
+			int healthDifferenceWhenP1Wins,
+			int healthDifferenceWhenP1Loses)
 		{
 			if (player1won == player2won)
 				throw new Exception($"both players have the same winning status");
@@ -65,11 +98,17 @@ namespace SabberStoneBasicAI.CompetitionEvaluation
 			if (player1won)
 			{
 				WinsPlayer1 += 1;
+				TurnsPlayer1ToWin += turnsPlayer1ToWin;
+				HealthDifferenceWhenP1Wins += healthDifferenceWhenP1Wins;
+
 				if (exceptionplayer2) ExceptionsPlayer2 += 1;
 			}
 			else
 			{
 				WinsPlayer2 += 1;
+				TurnsPlayer1ToLose += turnsPlayer1ToLose;
+				HealthDifferenceWhenP1Loses += healthDifferenceWhenP1Loses;
+
 				if (exceptionplayer1) ExceptionsPlayer1 += 1;
 			}
 
@@ -94,8 +133,11 @@ namespace SabberStoneBasicAI.CompetitionEvaluation
 				{
 					using (StreamWriter sw = File.AppendText(resultfile))
 					{
-						sw.WriteLine(String.Format("Match Result: {0} {1} {2} {3} {4} {5} {6} {7}", idx_player_1, idx_player_2, idx_deck_1, idx_deck_2,
-							WinsPlayer1, WinsPlayer2, ExceptionsPlayer1, ExceptionsPlayer2));
+						sw.WriteLine(String.Format(
+							"Match Result: {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}",
+							idx_player_1, idx_player_2, idx_deck_1, idx_deck_2,
+							WinsPlayer1, WinsPlayer2, ExceptionsPlayer1, ExceptionsPlayer2,
+							TurnsPlayer1ToWin, TurnsPlayer1ToLose, HealthDifferenceWhenP1Wins, HealthDifferenceWhenP1Loses));
 					}
 					file_written = true;
 				}
@@ -174,7 +216,7 @@ namespace SabberStoneBasicAI.CompetitionEvaluation
 			this.resultfile = resultfile;
 
 			if (resultfile != null)
-			{ 
+			{
 				InitializeResults();
 			}
 		}
@@ -409,7 +451,11 @@ namespace SabberStoneBasicAI.CompetitionEvaluation
 				gameStats.PlayerA_Wins == 1,
 				gameStats.PlayerB_Wins == 1,
 				gameStats.PlayerA_Exceptions == 1,
-				gameStats.PlayerB_Exceptions == 1
+				gameStats.PlayerB_Exceptions == 1,
+				gameStats.PlayerA_TurnsToWin,
+				gameStats.PlayerA_TurnsToLose,
+				gameStats.PlayerA_HealthDifferenceWinning,
+				gameStats.PlayerA_HealthDifferenceLosing
 			);
 
 			if (resultfile != null)
@@ -446,26 +492,58 @@ namespace SabberStoneBasicAI.CompetitionEvaluation
 				int games_played = 0;
 				int games_won = 0;
 				int games_lost_by_exception = 0;
+				int turnsPlayer1ToWin = 0;
+				int turnsPlayer1ToLose = 0;
+				int healthDifferenceWhenP1Wins = 0;
+				int healthDifferenceWhenP1Loses = 0;
+				int winsCount = 0;
+				int lossesCount = 0;
+
 				for (int player_2 = 0; player_2 < agents.Length; player_2++)
 				{
 					if (player_1 == player_2) continue;
 
 					for (int deck_1 = 0; deck_1 < decks.Length; deck_1++)
+					{
 						for (int deck_2 = 0; deck_2 < decks.Length; deck_2++)
 						{
-							// first round
-							games_played += results[player_1, player_2, deck_1, deck_2].GamesPlayed;
-							games_won += results[player_1, player_2, deck_1, deck_2].WinsPlayer1;
-							games_lost_by_exception += results[player_1, player_2, deck_1, deck_2].ExceptionsPlayer1;
+							var first = results[player_1, player_2, deck_1, deck_2];
+							games_played += first.GamesPlayed;
+							games_won += first.WinsPlayer1;
+							games_lost_by_exception += first.ExceptionsPlayer1;
+							turnsPlayer1ToWin += first.TurnsPlayer1ToWin;
+							turnsPlayer1ToLose += first.TurnsPlayer1ToLose;
+							healthDifferenceWhenP1Wins += first.HealthDifferenceWhenP1Wins;
+							healthDifferenceWhenP1Loses += first.HealthDifferenceWhenP1Loses;
+							winsCount += first.WinsPlayer1;
+							lossesCount += first.WinsPlayer2;
 
-							// second round
-							games_played += results[player_2, player_1, deck_2, deck_1].GamesPlayed;
-							games_won += results[player_2, player_1, deck_2, deck_1].WinsPlayer2;
-							games_lost_by_exception += results[player_2, player_1, deck_2, deck_1].ExceptionsPlayer2;
+							var second = results[player_2, player_1, deck_2, deck_1];
+							games_played += second.GamesPlayed;
+							games_won += second.WinsPlayer2;
+							games_lost_by_exception += second.ExceptionsPlayer2;
+
+							// from player_1 perspective, second.WinsPlayer2 means player_1 won
+							turnsPlayer1ToWin += second.TurnsPlayer1ToLose;
+							turnsPlayer1ToLose += second.TurnsPlayer1ToWin;
+							healthDifferenceWhenP1Wins += second.HealthDifferenceWhenP1Loses;
+							healthDifferenceWhenP1Loses += second.HealthDifferenceWhenP1Wins;
+							winsCount += second.WinsPlayer2;
+							lossesCount += second.WinsPlayer1;
 						}
+					}
 				}
-				Console.WriteLine($"Agent {agents[player_1].AgentAuthor}'s win-rate={Math.Round(((float)games_won) / games_played, 2)} " +
-					$"({games_won} out of {games_played} games). {games_lost_by_exception} were lost by Exception.");
+
+				double avgTurnsToWin = winsCount > 0 ? (double)turnsPlayer1ToWin / winsCount : 0.0;
+				double avgTurnsToLose = lossesCount > 0 ? (double)turnsPlayer1ToLose / lossesCount : 0.0;
+				double avgHealthWin = winsCount > 0 ? (double)healthDifferenceWhenP1Wins / winsCount : 0.0;
+				double avgHealthLose = lossesCount > 0 ? (double)healthDifferenceWhenP1Loses / lossesCount : 0.0;
+
+				Console.WriteLine(
+					$"Agent {agents[player_1].AgentAuthor}'s win-rate={Math.Round((float)games_won / games_played, 2)} " +
+					$"({games_won} out of {games_played} games). {games_lost_by_exception} were lost by Exception. " +
+					$"Avg turns to win: {avgTurnsToWin:F2}, avg turns to lose: {avgTurnsToLose:F2}, " +
+					$"avg health diff when winning: {avgHealthWin:F2}, avg health diff when losing: {avgHealthLose:F2}");
 			}
 		}
 

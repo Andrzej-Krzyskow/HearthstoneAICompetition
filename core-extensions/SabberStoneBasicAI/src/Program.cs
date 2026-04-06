@@ -25,6 +25,7 @@ using SabberStoneBasicAI.Score;
 using SabberStoneBasicAI.AIAgents;
 using SabberStoneBasicAI.PartialObservation;
 using SabberStoneBasicAI.CompetitionEvaluation;
+using System.IO;
 
 namespace SabberStoneBasicAI
 {
@@ -32,9 +33,16 @@ namespace SabberStoneBasicAI
 	{
 		private static readonly Random Rnd = new Random();
 
-		private static void Main()
+		private static void Main(string[] args)
 		{
 			Console.WriteLine("Starting test setup.");
+
+			string resultsFile = "results.txt";
+
+			if (File.Exists(resultsFile))
+			{
+				File.Delete(resultsFile);
+			}
 
 			// TEST BASIC AI
 
@@ -43,19 +51,32 @@ namespace SabberStoneBasicAI
 			//RandomGames();
 			//TestPOGame();
 			//TestFullGames();
-			TestTournament();
+			TestTournament(args);
 
 			Console.WriteLine("Test ended!");
 			Console.ReadLine();
 		}
 
-		public static void TestTournament()
+		public static void TestTournament(string[] args)
 		{
+			// ParametricGreedyAgent
+			// ModifiedParametricGreedyAgent63
+			// ModifiedParametricGreedyAgent28
+			// ModifiedParametricGreedyAgent21Depth
+
 			Agent[] agents = new Agent[2];
-			agents[0] = new Agent(typeof(RandomAgent), "Random Agent");
+			 agents[0] = new Agent(typeof(ParametricGreedyAgent), "ParametricGreedyAgent");
+			// agents[0] = new Agent(typeof(ModifiedParametricGreedyAgent63), "ModifiedParametricGreedyAgent63");
+			// agents[1] = new Agent(typeof(ModifiedParametricGreedyAgent28), "ModifiedParametricGreedyAgent28");
+			// agents[1] = new Agent(typeof(ModifiedParametricGreedyAgent21Depth), "ModifiedParametricGreedyAgent21Depth");
+			 agents[1] = new Agent(typeof(ModifiedParametricGreedyAgent28Normalaized), "ModifiedParametricGreedyAgent28Normalaized");
+			
+			
+
+/*			agents[0] = new Agent(typeof(RandomAgent), "Random Agent");
 			agents[1] = new Agent(typeof(GreedyAgent), "Greedy Agent");
-			//agents[2] = new Agent(typeof(DynamicLookaheadAgent), "Dynamic Lookahead Agent");
-			//agents[3] = new Agent(typeof(BeamSearchAgent), "Beam Search Agent");
+			agents[2] = new Agent(typeof(DynamicLookaheadAgent), "Dynamic Lookahead Agent");
+			agents[3] = new Agent(typeof(BeamSearchAgent), "Beam Search Agent");*/
 
 			CompetitionEvaluation.Deck[] decks = new CompetitionEvaluation.Deck[3];
 			decks[0] = new CompetitionEvaluation.Deck(Decks.RenoKazakusMage, CardClass.MAGE, "Mage");
@@ -63,8 +84,8 @@ namespace SabberStoneBasicAI
 			decks[2] = new CompetitionEvaluation.Deck(Decks.MidrangeJadeShaman, CardClass.SHAMAN, "Shaman");
 
 			RoundRobinCompetition competition = new RoundRobinCompetition(agents, decks, "results.txt");
-			competition.CreateTasks(100);
-			competition.startEvaluation(8);
+			competition.CreateTasks(1000);//100
+			competition.startEvaluation(12);//8
 
 			Console.WriteLine("Total Games Played: " + competition.GetTotalGamesPlayed());
 			competition.PrintAgentStats();

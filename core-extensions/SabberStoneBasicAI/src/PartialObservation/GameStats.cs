@@ -15,6 +15,10 @@ namespace SabberStoneBasicAI.PartialObservation
 		private double[] time_per_player = new[] { 0D, 0D };
 		private int[] exception_count = new[] { 0, 0 };
 		private Dictionary<int, string> exceptions = new Dictionary<int, string>();
+		int turnsPlayer1ToWin = 0;
+		int turnsPlayer1ToLose = 0;
+		int healthDifferenceWhenP1Wins = 0;
+		int healthDifferenceWhenP1Loses = 0;
 
 		//Todo add getter for each private variable
 
@@ -28,10 +32,19 @@ namespace SabberStoneBasicAI.PartialObservation
 			nr_games++;
 			turns += game.Turn;
 
+
 			if (game.Player1.PlayState == PlayState.WON)
+			{
 				wins[0]++;
+				turnsPlayer1ToWin += game.Turn;
+				healthDifferenceWhenP1Wins += game.Player1.Hero.Health - game.Player2.Hero.Health;
+			}
 			else if (game.Player2.PlayState == PlayState.WON)
+			{
 				wins[1]++;
+				turnsPlayer1ToLose += game.Turn;
+				healthDifferenceWhenP1Loses += game.Player2.Hero.Health - game.Player1.Hero.Health;
+			}
 			else
 				draws++;
 
@@ -115,6 +128,45 @@ namespace SabberStoneBasicAI.PartialObservation
 			get
 			{
 				return this.exception_count[1];
+			}
+		}
+
+
+		public int PlayerA_TurnsToWin
+		{
+			get
+			{
+				return this.turnsPlayer1ToWin;
+			}
+		}
+
+
+
+		public int PlayerA_TurnsToLose
+		{
+			get
+			{
+				return this.turnsPlayer1ToLose;
+			}
+		}
+
+
+
+		public int PlayerA_HealthDifferenceWinning
+		{
+			get
+			{
+				return this.healthDifferenceWhenP1Wins;
+			}
+		}
+
+
+
+		public int PlayerA_HealthDifferenceLosing
+		{
+			get
+			{
+				return this.healthDifferenceWhenP1Loses;
 			}
 		}
 	}
