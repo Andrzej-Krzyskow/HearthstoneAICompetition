@@ -208,6 +208,33 @@ namespace SabberStoneBasicAI.CompetitionEvaluation
 		string resultfile;
 		string CompetitionType = "RoundRobin_DeckPlaying";
 
+		/// <summary>Zwraca (wins, gamesPlayed) dla agenta o danym indeksie.</summary>
+		public (int wins, int games) GetAgentStats(int agentIdx)
+		{
+			int games = 0, wins = 0;
+
+			for (int player_2 = 0; player_2 < agents.Length; player_2++)
+			{
+				if (agentIdx == player_2) continue;
+
+				for (int deck_1 = 0; deck_1 < decks.Length; deck_1++)
+				{
+					for (int deck_2 = 0; deck_2 < decks.Length; deck_2++)
+					{
+						var asP1 = results[agentIdx, player_2, deck_1, deck_2];
+						games += asP1.GamesPlayed;
+						wins += asP1.WinsPlayer1;
+
+						var asP2 = results[player_2, agentIdx, deck_2, deck_1];
+						games += asP2.GamesPlayed;
+						wins += asP2.WinsPlayer2;
+					}
+				}
+			}
+
+			return (wins, games);
+		}
+
 		public RoundRobinCompetition(Agent[] agents, Deck[] decks, string resultfile)
 		{
 			//store agents and decks
@@ -257,40 +284,34 @@ namespace SabberStoneBasicAI.CompetitionEvaluation
 
 		private void WriteCurrentStateToFile()
 		{
-			if (resultfile != null)
+			if (resultfile == null) return;
+
+			using (StreamWriter sw = File.CreateText(resultfile))
 			{
-				using (StreamWriter sw = File.CreateText(resultfile))
-				{
-					sw.WriteLine(CompetitionType);
-					sw.WriteLine();
-
-					sw.WriteLine("Agents");
-					for (int i = 0; i < agents.Length; i++)
-					{
-						sw.WriteLine(agents[i].AgentAuthor);
-					}
-					sw.WriteLine();
-
-					sw.WriteLine("Decks");
-					for (int i = 0; i < decks.Length; i++)
-					{
-						sw.WriteLine(decks[i].deckname);
-					}
-					sw.WriteLine();
-					sw.WriteLine("Match Results");
-				}
-
+				sw.WriteLine(CompetitionType);
+				sw.WriteLine();
+				sw.WriteLine("Agents");
 				for (int i = 0; i < agents.Length; i++)
+					sw.WriteLine(agents[i].AgentAuthor);
+				sw.WriteLine();
+				sw.WriteLine("Decks");
+				for (int i = 0; i < decks.Length; i++)
+					sw.WriteLine(decks[i].deckname);
+				sw.WriteLine();
+				sw.WriteLine("Match Results");
+			}
+
+			// Zapisuj WSZYSTKIE kombinacje (i,j), nie tylko i < j
+			for (int i = 0; i < agents.Length; i++)
+			{
+				for (int j = 0; j < agents.Length; j++)
 				{
-					for (int j = i + 1; j < agents.Length; j++)
-					{
-						for (int deck_i = 0; deck_i < decks.Length; deck_i++)
-							for (int deck_j = 0; deck_j < decks.Length; deck_j++)
-								if (results[i, j, deck_i, deck_j] != null)
-								{
-									results[i, j, deck_i, deck_j].writeToFile(resultfile, i, j, deck_i, deck_j);
-								}
-					}
+					if (i == j) continue;  // ← zamiast j = i+1
+					for (int deck_i = 0; deck_i < decks.Length; deck_i++)
+						for (int deck_j = 0; deck_j < decks.Length; deck_j++)
+							if (results[i, j, deck_i, deck_j] != null)
+								results[i, j, deck_i, deck_j]
+									.writeToFile(resultfile, i, j, deck_i, deck_j);
 				}
 			}
 		}

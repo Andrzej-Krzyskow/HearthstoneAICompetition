@@ -33,62 +33,160 @@ namespace SabberStoneBasicAI
 	{
 		private static readonly Random Rnd = new Random();
 
+		// ─── Konfiguracja turnieju ────────────────────────────────────────────────
+		private const int DefaultNumRuns = 1;
+		private const int GamesPerMatchup = 1000;
+		private const int NumThreads = 12;
+
+		private static string FindProjectRoot()
+		{
+			var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+			while (dir != null)
+			{
+				if (dir.GetFiles("*.csproj").Length > 0)
+					return dir.FullName;
+				dir = dir.Parent;
+			}
+			return Path.GetFullPath(
+				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", ".."));
+		}
+
+		private static readonly string ProjectRoot = FindProjectRoot();
+		private static readonly string ResultsDir = Path.Combine(ProjectRoot, "src", "results");
+		private static readonly string RunTimestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+		private static readonly string SummaryFile = Path.Combine(ResultsDir, $"results_{RunTimestamp}.txt");
+		// ─────────────────────────────────────────────────────────────────────────
+
 		private static void Main(string[] args)
 		{
 			Console.WriteLine("Starting test setup.");
-
-			string resultsFile = "results.txt";
-
-			if (File.Exists(resultsFile))
-			{
-				File.Delete(resultsFile);
-			}
-
-			// TEST BASIC AI
-
-			//OneTurn();
-			//FullGame();
-			//RandomGames();
-			//TestPOGame();
-			//TestFullGames();
 			TestTournament(args);
-
 			Console.WriteLine("Test ended!");
 			Console.ReadLine();
 		}
 
+		// ─── Dodawaj/usuwaj boty tutaj ────────────────────────────────────────────
+		private static List<Agent> BuildAgentList() => new List<Agent>
+{
+	new Agent(typeof(ParametricGreedyAgentPure051),          "ParametricGreedyAgentPure051"),
+	new Agent(typeof(ParametricGreedyAgentPure052),          "ParametricGreedyAgentPure052"),
+	new Agent(typeof(ParametricGreedyAgentPure101),          "ParametricGreedyAgentPure101"),
+	new Agent(typeof(ParametricGreedyAgentPure102),          "ParametricGreedyAgentPure102"),
+	new Agent(typeof(ParametricGreedyAgentPure151),          "ParametricGreedyAgentPure151"),
+	new Agent(typeof(ParametricGreedyAgentPure152),          "ParametricGreedyAgentPure152"),
+	//new Agent(typeof(ParametricGreedyAgentLike051),          "ParametricGreedyAgentLike051"),
+	//new Agent(typeof(ParametricGreedyAgentLike052),          "ParametricGreedyAgentLike052"),
+	//new Agent(typeof(ParametricGreedyAgentLike101),          "ParametricGreedyAgentLike101"),
+	//new Agent(typeof(ParametricGreedyAgentLike102),          "ParametricGreedyAgentLike102"),
+	//new Agent(typeof(ParametricGreedyAgentLike151),          "ParametricGreedyAgentLike151"),
+	//new Agent(typeof(ParametricGreedyAgentLike152),          "ParametricGreedyAgentLike152"),
+	//new Agent(typeof(ShadeLikeParametricGreedyAgent), "ShadeLikeParametricGreedyAgent"),
+    // new Agent(typeof(ModifiedParametricGreedyAgent63),            "MPA63"),
+    // new Agent(typeof(ModifiedParametricGreedyAgent28),            "MPA28"),
+    // new Agent(typeof(ModifiedParametricGreedyAgent21Depth),       "MPA21Depth"),
+    // new Agent(typeof(ModifiedParametricGreedyAgent28Normalaized), "MPA28Norm"),
+    // new Agent(typeof(RandomAgent),                                "Random"),
+    // new Agent(typeof(GreedyAgent),                                "Greedy"),
+};
+		// ─────────────────────────────────────────────────────────────────────────
+
 		public static void TestTournament(string[] args)
 		{
-			// ParametricGreedyAgent
-			// ModifiedParametricGreedyAgent63
-			// ModifiedParametricGreedyAgent28
-			// ModifiedParametricGreedyAgent21Depth
+			int numRuns = DefaultNumRuns;
+			if (args.Length > 0 && int.TryParse(args[0], out int parsed))
+				numRuns = parsed;
 
-			Agent[] agents = new Agent[2];
-			 agents[0] = new Agent(typeof(ParametricGreedyAgent), "ParametricGreedyAgent");
-			// agents[0] = new Agent(typeof(ModifiedParametricGreedyAgent63), "ModifiedParametricGreedyAgent63");
-			// agents[1] = new Agent(typeof(ModifiedParametricGreedyAgent28), "ModifiedParametricGreedyAgent28");
-			// agents[1] = new Agent(typeof(ModifiedParametricGreedyAgent21Depth), "ModifiedParametricGreedyAgent21Depth");
-			 agents[1] = new Agent(typeof(ModifiedParametricGreedyAgent28Normalaized), "ModifiedParametricGreedyAgent28Normalaized");
-			
-			
+			List<Agent> agents = BuildAgentList();
 
-/*			agents[0] = new Agent(typeof(RandomAgent), "Random Agent");
-			agents[1] = new Agent(typeof(GreedyAgent), "Greedy Agent");
-			agents[2] = new Agent(typeof(DynamicLookaheadAgent), "Dynamic Lookahead Agent");
-			agents[3] = new Agent(typeof(BeamSearchAgent), "Beam Search Agent");*/
+			CompetitionEvaluation.Deck[] decks =
+			{
+		new CompetitionEvaluation.Deck(Decks.RenoKazakusMage,    CardClass.MAGE,    "Mage"),
+		new CompetitionEvaluation.Deck(Decks.AggroPirateWarrior, CardClass.WARRIOR, "Warrior"),
+		new CompetitionEvaluation.Deck(Decks.MidrangeJadeShaman, CardClass.SHAMAN,  "Shaman"),
+	};
 
-			CompetitionEvaluation.Deck[] decks = new CompetitionEvaluation.Deck[3];
-			decks[0] = new CompetitionEvaluation.Deck(Decks.RenoKazakusMage, CardClass.MAGE, "Mage");
-			decks[1] = new CompetitionEvaluation.Deck(Decks.AggroPirateWarrior, CardClass.WARRIOR, "Warrior");
-			decks[2] = new CompetitionEvaluation.Deck(Decks.MidrangeJadeShaman, CardClass.SHAMAN, "Shaman");
+			int[] totalWins = new int[agents.Count];
+			int[] totalGames = new int[agents.Count];
+			var runTimes = new List<long>();
 
-			RoundRobinCompetition competition = new RoundRobinCompetition(agents, decks, "results.txt");
-			competition.CreateTasks(1000);//100
-			competition.startEvaluation(12);//8
+			Directory.CreateDirectory(ResultsDir);
 
-			Console.WriteLine("Total Games Played: " + competition.GetTotalGamesPlayed());
-			competition.PrintAgentStats();
+			string header =
+				$"Tournament Results – {DateTime.Now:yyyy-MM-dd HH:mm:ss}\n" +
+				$"Saved to: {SummaryFile}\n" +
+				$"Runs: {numRuns} | Games per matchup: {GamesPerMatchup} | Threads: {NumThreads}\n" +
+				$"Agents: {string.Join(", ", agents.Select(a => a.AgentAuthor))}\n" +
+				new string('=', 60) + "\n";
+
+			File.WriteAllText(SummaryFile, header);
+			Console.Write(header);
+
+			for (int run = 1; run <= numRuns; run++)
+			{
+				string runFile = Path.Combine(ResultsDir, $"results_run{run}_{RunTimestamp}.txt"); // ← ResultsDir, nie ProjectRoot
+
+				string runHeader = $"\n{new string('─', 60)}\nRUN {run}/{numRuns}\n{new string('─', 60)}\n";
+				AppendToSummary(runHeader);
+
+				var sw = Stopwatch.StartNew();
+
+				var competition = new RoundRobinCompetition(agents.ToArray(), decks, runFile);
+				competition.CreateTasks(GamesPerMatchup);
+				competition.startEvaluation(NumThreads);
+
+				sw.Stop();
+				runTimes.Add(sw.ElapsedMilliseconds);
+
+				for (int i = 0; i < agents.Count; i++)
+				{
+					var (wins, games) = competition.GetAgentStats(i);
+					totalWins[i] += wins;
+					totalGames[i] += games;
+				}
+
+				competition.PrintAgentStats();
+
+				string runFooter =
+					$"Run {run} done in {sw.ElapsedMilliseconds / 1000.0:F1}s | " +
+					$"Total games: {competition.GetTotalGamesPlayed()}\n";
+				AppendToSummary(runFooter);
+			}
+
+			string summary = BuildSummary(agents, totalWins, totalGames, numRuns, runTimes);
+			AppendToSummary(summary);
+			Console.Write(summary);
+		}
+		private static void AppendToSummary(string message)
+		{
+			Console.Write(message);
+			File.AppendAllText(SummaryFile, message);
+		}
+
+		private static string BuildSummary(
+			List<Agent> agents,
+			int[] totalWins,
+			int[] totalGames,
+			int numRuns,
+			List<long> runTimes)
+		{
+			var sb = new System.Text.StringBuilder();
+			sb.AppendLine($"\n{new string('=', 60)}");
+			sb.AppendLine($"AGGREGATED SUMMARY ({numRuns} run(s))");
+			sb.AppendLine(new string('=', 60));
+			sb.AppendLine($"{"Agent",-40} {"Wins",8} {"Games",8} {"Win%",8}");
+			sb.AppendLine(new string('-', 60));
+
+			for (int i = 0; i < agents.Count; i++)
+			{
+				double pct = totalGames[i] > 0 ? totalWins[i] * 100.0 / totalGames[i] : 0.0;
+				sb.AppendLine($"{agents[i].AgentAuthor,-40} {totalWins[i],8} {totalGames[i],8} {pct,7:F2}%");
+			}
+
+			sb.AppendLine(new string('-', 60));
+			sb.AppendLine($"Total wall time : {runTimes.Sum() / 1000.0:F1}s");
+			sb.AppendLine($"Avg  per run    : {runTimes.Average() / 1000.0:F1}s");
+			sb.AppendLine(new string('=', 60));
+			return sb.ToString();
 		}
 
 		public static void TestPOGame()

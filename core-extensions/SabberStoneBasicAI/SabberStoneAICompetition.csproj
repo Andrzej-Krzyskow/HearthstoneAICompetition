@@ -1,13 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <OutputType>Exe</OutputType>
-    <StartupObject>SabberStoneBasicAI.Program</StartupObject>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\SabberStoneCore\SabberStoneCore.csproj" />
-  </ItemGroup>
-
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>netcoreapp2.1</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\SabberStoneCore\SabberStoneCore.csproj" />
+	</ItemGroup>
 </Project>
