@@ -1,0 +1,8 @@
+Tournament: MPA21Depth-subphase2 – 2026-05-23 18:46:48
+Runs: 1 | Games per matchup: 1000 | Threads: 12
+Agents: MPA21Depth-best-coev-1, MPA21Depth-best-shade-like-2, MPA21Depth-best-shade-pure-3
+============================================================
+
+────────────────────────────────────────────────────────────
+RUN 1/1
+────────────────────────────────────────────────────────────

@@ -1,0 +1,23 @@
+Tournament Results – 2026-05-12 20:36:48
+Saved to: D:\Pics_Movies\vids\PWr\Sem10\magisterka\HearthstoneAICompetition\core-extensions\SabberStoneBasicAI\src\results\results_2026-05-12_20-36-48.txt
+Runs: 1 | Games per matchup: 1000 | Threads: 12
+Agents: MPA63Smooth, MPA63Smooth-2, MPA63Smooth-2
+============================================================
+
+────────────────────────────────────────────────────────────
+RUN 1/1
+────────────────────────────────────────────────────────────
+Run 1 done in 2400.1s | Total games: 54000
+
+============================================================
+AGGREGATED SUMMARY (1 run(s))
+============================================================
+Agent                                        Wins    Games     Win%
+------------------------------------------------------------
+MPA63Smooth                                 17479    36000   48.55%
+MPA63Smooth-2                               17724    36000   49.23%
+MPA63Smooth-2                               18797    36000   52.21%
+------------------------------------------------------------
+Total wall time : 2400.1s
+Avg  per run    : 2400.1s
+============================================================

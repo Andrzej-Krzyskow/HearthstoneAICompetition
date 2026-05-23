@@ -1,0 +1,22 @@
+Tournament: ParametricBase-subphase2 – 2026-05-23 15:20:44
+Runs: 1 | Games per matchup: 1000 | Threads: 12
+Agents: ParametricBase-best-coev-1, ParametricBase-best-shade-like-2, ParametricBase-best-shade-pure-3
+============================================================
+
+────────────────────────────────────────────────────────────
+RUN 1/1
+────────────────────────────────────────────────────────────
+Run 1 done in 2381.4s | Total games: 54000
+
+============================================================
+AGGREGATED SUMMARY – ParametricBase-subphase2 (1 run(s))
+============================================================
+Agent                                        Wins    Games     Win%
+------------------------------------------------------------
+ParametricBase-best-coev-1                  17664    36000   49.07%
+ParametricBase-best-shade-like-2            18706    36000   51.96%
+ParametricBase-best-shade-pure-3            17630    36000   48.97%
+------------------------------------------------------------
+Total wall time : 2381.4s
+Avg  per run    : 2381.4s
+============================================================

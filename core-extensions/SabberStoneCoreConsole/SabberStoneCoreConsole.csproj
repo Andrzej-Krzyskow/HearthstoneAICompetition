@@ -1,6 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <NuGetAudit>false</NuGetAudit>
     <TargetFramework>netcoreapp2.1</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<Configurations>Debug;Release;NoSpan</Configurations>

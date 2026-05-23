@@ -1,0 +1,26 @@
+Tournament Results – 2026-05-01 16:13:08
+Saved to: D:\Pics_Movies\vids\PWr\Sem10\magisterka\HearthstoneAICompetition\core-extensions\SabberStoneBasicAI\src\results\results_2026-05-01_16-13-08.txt
+Runs: 1 | Games per matchup: 1000 | Threads: 12
+Agents: ParametricGreedyAgentPure051, ParametricGreedyAgentPure052, ParametricGreedyAgentPure101, ParametricGreedyAgentPure102, ParametricGreedyAgentPure151, ParametricGreedyAgentPure152
+============================================================
+
+────────────────────────────────────────────────────────────
+RUN 1/1
+────────────────────────────────────────────────────────────
+Run 1 done in 15853.7s | Total games: 270000
+
+============================================================
+AGGREGATED SUMMARY (1 run(s))
+============================================================
+Agent                                        Wins    Games     Win%
+------------------------------------------------------------
+ParametricGreedyAgentPure051                43089    90000   47.88%
+ParametricGreedyAgentPure052                45206    90000   50.23%
+ParametricGreedyAgentPure101                45135    90000   50.15%
+ParametricGreedyAgentPure102                42292    90000   46.99%
+ParametricGreedyAgentPure151                47312    90000   52.57%
+ParametricGreedyAgentPure152                46966    90000   52.18%
+------------------------------------------------------------
+Total wall time : 15853.7s
+Avg  per run    : 15853.7s
+============================================================

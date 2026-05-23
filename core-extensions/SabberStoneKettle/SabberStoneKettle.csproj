@@ -1,7 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
+    <NuGetAudit>false</NuGetAudit>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>

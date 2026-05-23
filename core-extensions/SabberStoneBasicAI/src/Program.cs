@@ -26,6 +26,8 @@ using SabberStoneBasicAI.AIAgents;
 using SabberStoneBasicAI.PartialObservation;
 using SabberStoneBasicAI.CompetitionEvaluation;
 using System.IO;
+using SabberStoneCoreAi.Tyche2;
+using SabberStoneBasicAI.AIAgents.Gretive;
 
 namespace SabberStoneBasicAI
 {
@@ -37,6 +39,7 @@ namespace SabberStoneBasicAI
 		private const int DefaultNumRuns = 1;
 		private const int GamesPerMatchup = 1000;
 		private const int NumThreads = 12;
+		// ─────────────────────────────────────────────────────────────────────────
 
 		private static string FindProjectRoot()
 		{
@@ -54,79 +57,203 @@ namespace SabberStoneBasicAI
 		private static readonly string ProjectRoot = FindProjectRoot();
 		private static readonly string ResultsDir = Path.Combine(ProjectRoot, "src", "results");
 		private static readonly string RunTimestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-		private static readonly string SummaryFile = Path.Combine(ResultsDir, $"results_{RunTimestamp}.txt");
+
+		// ─── Klasa reprezentująca grupę turniejową ────────────────────────────────
+		public class TournamentGroup
+		{
+			public string Name { get; }
+			public List<Agent> Agents { get; }
+			public TournamentGroup(string name, List<Agent> agents)
+			{
+				Name = name;
+				Agents = agents;
+			}
+		}
 		// ─────────────────────────────────────────────────────────────────────────
+
+		// ═══════════════════════════════════════════════════════════════════════════
+		// ─── GRUPY TURNIEJOWE — dodawaj / edytuj tutaj ────────────────────────────
+		// ═══════════════════════════════════════════════════════════════════════════
+		private static List<TournamentGroup> BuildTournamentGroups() => new List<TournamentGroup>
+		{
+
+			new TournamentGroup("ParametricBase-subphase2", new List<Agent>
+			{
+				new Agent(typeof(ParametricGreedyAgent),   "ParametricBase-best-coev-1"),
+				new Agent(typeof(ParametricGreedyAgent_2), "ParametricBase-best-shade-like-2"),
+				new Agent(typeof(ParametricGreedyAgent_3), "ParametricBase-best-shade-pure-3"),
+			}),
+
+			new TournamentGroup("MPA63-subphase2", new List<Agent>
+			 {
+			 	new Agent(typeof(ModifiedParametricGreedyAgent63),   "MPA63-best-coev-1"),
+			 	new Agent(typeof(ModifiedParametricGreedyAgent63_2), "MPA63-best-shade-like-2"),
+			 	new Agent(typeof(ModifiedParametricGreedyAgent63_3), "MPA63-best-shade-pure-3"),
+			 }),
+
+			new TournamentGroup("MPA63Smooth-subphase2", new List<Agent>
+			{
+				new Agent(typeof(ModifiedParametricGreedyAgent63Smooth),   "MPA63Smooth-best-coev-1"),
+				new Agent(typeof(ModifiedParametricGreedyAgent63Smooth_2), "MPA63Smooth-best-shade-like-2"),
+				new Agent(typeof(ModifiedParametricGreedyAgent63Smooth_3), "MPA63Smooth-best-shade-pure-3"),
+			}),
+
+
+			new TournamentGroup("MPA28-subphase2", new List<Agent>
+			{
+				new Agent(typeof(ModifiedParametricGreedyAgent28),   "MPA28-best-coev-1"),
+				new Agent(typeof(ModifiedParametricGreedyAgent28_2), "MPA28-best-shade-like-2"),
+				new Agent(typeof(ModifiedParametricGreedyAgent28_3), "MPA28-best-shade-pure-3"),
+			}),
+
+			new TournamentGroup("MPA28Norm-subphase2", new List<Agent>
+			{
+				new Agent(typeof(ModifiedParametricGreedyAgent28Normalaized),   "MPA28Norm-best-coev-1"),
+				new Agent(typeof(ModifiedParametricGreedyAgent28Normalaized_2), "MPA28Norm-best-shade-like-2"),
+				new Agent(typeof(ModifiedParametricGreedyAgent28Normalaized_3), "MPA28Norm-best-shade-pure-3"),
+			}),
+
+
+			new TournamentGroup("MPA21Depth-subphase2", new List<Agent>
+			 {
+			 	new Agent(typeof(ModifiedParametricGreedyAgent21Depth),   "MPA21Depth-best-coev-1"),
+			 	new Agent(typeof(ModifiedParametricGreedyAgent21Depth_2), "MPA21Depth-best-shade-like-2"),
+			 	new Agent(typeof(ModifiedParametricGreedyAgent21Depth_3), "MPA21Depth-best-shade-pure-3"),
+			 }),
+
+
+			//new TournamentGroup("Phase2", new List<Agent>
+			// {
+				//new Agent(typeof(ParametricGreedyAgent_2), "ParametricBase-best-shade-like-2"),
+				//new Agent(typeof(ModifiedParametricGreedyAgent63_2), "MPA63-best-shade-like-2"),
+				//new Agent(typeof(ModifiedParametricGreedyAgent63Smooth_2), "MPA63Smooth-best-shade-like-2"),
+				//new Agent(typeof(ModifiedParametricGreedyAgent28_2), "MPA28-best-shade-like-2"),
+				//new Agent(typeof(ModifiedParametricGreedyAgent28Normalaized_2), "MPA28Norm-best-shade-like-2"),
+				//new Agent(typeof(ModifiedParametricGreedyAgent21Depth),   "MPA21Depth"),
+			// }),
+
+
+			//new TournamentGroup("Phase3", new List<Agent>
+			// {
+			//	new Agent(typeof(ModifiedParametricGreedyAgent21Depth),   "MPA21Depth"),
+			//	new Agent(typeof(MyAgentSebastianMiller2), "MyAgentSebastianMiller2Naive"),
+			//	new Agent(typeof(TycheAgentCompetition), "TycheAgentCompetition"),
+			//	new Agent(typeof(GretiveComp), "GretiveComp"),
+			// }),
+
+
+			// works - lookahead 2020
+			//new TournamentGroup("Competition", new List<Agent>
+			//{
+			//	new Agent(typeof(ParametricGreedyAgent), "ParametricGreedyAgent"),
+			//	new Agent(typeof(MyAgentSebastianMiller2), "MyAgentSebastianMiller2Naive"),
+
+
+			// should be ok - MCTS tyche 2018
+			//new TournamentGroup("Competition", new List<Agent>
+			//{
+			//	new Agent(typeof(ParametricGreedyAgent), "ParametricGreedyAgent"),
+			//	new Agent(typeof(TycheAgentCompetition), "TycheAgentCompetition"),
+			//}),
+
+
+			// works minimax tree search - remero 2020
+			//new TournamentGroup("Competition", new List<Agent>
+			//{
+			//	new Agent(typeof(ParametricGreedyAgent), "ParametricGreedyAgent"),
+			//	new Agent(typeof(GretiveComp), "GretiveComp"),
+			//}),
+
+
+			// new TournamentGroup("Pure", new List<Agent>
+			// {
+			// 	new Agent(typeof(ParametricGreedyAgentPure051), "Pure051"),
+			// 	new Agent(typeof(ParametricGreedyAgentPure052), "Pure052"),
+			// 	new Agent(typeof(ParametricGreedyAgentPure101), "Pure101"),
+			// 	new Agent(typeof(ParametricGreedyAgentPure102), "Pure102"),
+			// 	new Agent(typeof(ParametricGreedyAgentPure151), "Pure151"),
+			// 	new Agent(typeof(ParametricGreedyAgentPure152), "Pure152"),
+			// }),
+
+			// new TournamentGroup("Like", new List<Agent>
+			// {
+			// 	new Agent(typeof(ParametricGreedyAgentLike051), "Like051"),
+			// 	new Agent(typeof(ParametricGreedyAgentLike052), "Like052"),
+			// 	new Agent(typeof(ParametricGreedyAgentLike101), "Like101"),
+			// 	new Agent(typeof(ParametricGreedyAgentLike102), "Like102"),
+			// 	new Agent(typeof(ParametricGreedyAgentLike151), "Like151"),
+			// 	new Agent(typeof(ParametricGreedyAgentLike152), "Like152"),
+			// }),
+
+			// new TournamentGroup("Misc", new List<Agent>
+			// {
+			// 	new Agent(typeof(ShadeLikeParametricGreedyAgent), "ShadeLike"),
+			// 	new Agent(typeof(RandomAgent),                    "Random"),
+			// 	new Agent(typeof(GreedyAgent),                    "Greedy"),
+			// }),
+		};
+		// ═══════════════════════════════════════════════════════════════════════════
 
 		private static void Main(string[] args)
 		{
 			Console.WriteLine("Starting test setup.");
-			TestTournament(args);
-			Console.WriteLine("Test ended!");
+
+			Directory.CreateDirectory(ResultsDir);
+			
+			var groups = BuildTournamentGroups();
+			Console.WriteLine($"Tournaments to run: {groups.Count}");
+
+			foreach (var group in groups)
+			{
+				Console.WriteLine($"\n{new string('=', 60)}");
+				Console.WriteLine($"TOURNAMENT GROUP: {group.Name}");
+				Console.WriteLine(new string('=', 60));
+				RunTournament(group, args);
+			}
+
+			Console.WriteLine("\nAll tournaments ended!");
 			Console.ReadLine();
 		}
 
-		// ─── Dodawaj/usuwaj boty tutaj ────────────────────────────────────────────
-		private static List<Agent> BuildAgentList() => new List<Agent>
-{
-	new Agent(typeof(ParametricGreedyAgentPure051),          "ParametricGreedyAgentPure051"),
-	new Agent(typeof(ParametricGreedyAgentPure052),          "ParametricGreedyAgentPure052"),
-	new Agent(typeof(ParametricGreedyAgentPure101),          "ParametricGreedyAgentPure101"),
-	new Agent(typeof(ParametricGreedyAgentPure102),          "ParametricGreedyAgentPure102"),
-	new Agent(typeof(ParametricGreedyAgentPure151),          "ParametricGreedyAgentPure151"),
-	new Agent(typeof(ParametricGreedyAgentPure152),          "ParametricGreedyAgentPure152"),
-	//new Agent(typeof(ParametricGreedyAgentLike051),          "ParametricGreedyAgentLike051"),
-	//new Agent(typeof(ParametricGreedyAgentLike052),          "ParametricGreedyAgentLike052"),
-	//new Agent(typeof(ParametricGreedyAgentLike101),          "ParametricGreedyAgentLike101"),
-	//new Agent(typeof(ParametricGreedyAgentLike102),          "ParametricGreedyAgentLike102"),
-	//new Agent(typeof(ParametricGreedyAgentLike151),          "ParametricGreedyAgentLike151"),
-	//new Agent(typeof(ParametricGreedyAgentLike152),          "ParametricGreedyAgentLike152"),
-	//new Agent(typeof(ShadeLikeParametricGreedyAgent), "ShadeLikeParametricGreedyAgent"),
-    // new Agent(typeof(ModifiedParametricGreedyAgent63),            "MPA63"),
-    // new Agent(typeof(ModifiedParametricGreedyAgent28),            "MPA28"),
-    // new Agent(typeof(ModifiedParametricGreedyAgent21Depth),       "MPA21Depth"),
-    // new Agent(typeof(ModifiedParametricGreedyAgent28Normalaized), "MPA28Norm"),
-    // new Agent(typeof(RandomAgent),                                "Random"),
-    // new Agent(typeof(GreedyAgent),                                "Greedy"),
-};
-		// ─────────────────────────────────────────────────────────────────────────
-
-		public static void TestTournament(string[] args)
+		public static void RunTournament(TournamentGroup group, string[] args)
 		{
 			int numRuns = DefaultNumRuns;
 			if (args.Length > 0 && int.TryParse(args[0], out int parsed))
 				numRuns = parsed;
 
-			List<Agent> agents = BuildAgentList();
+			List<Agent> agents = group.Agents;
+
+			string groupSummaryFile = Path.Combine(ResultsDir,
+				$"summary_{group.Name}_{RunTimestamp}.txt");
 
 			CompetitionEvaluation.Deck[] decks =
 			{
-		new CompetitionEvaluation.Deck(Decks.RenoKazakusMage,    CardClass.MAGE,    "Mage"),
-		new CompetitionEvaluation.Deck(Decks.AggroPirateWarrior, CardClass.WARRIOR, "Warrior"),
-		new CompetitionEvaluation.Deck(Decks.MidrangeJadeShaman, CardClass.SHAMAN,  "Shaman"),
-	};
+				new CompetitionEvaluation.Deck(Decks.RenoKazakusMage,    CardClass.MAGE,    "Mage"),
+				new CompetitionEvaluation.Deck(Decks.AggroPirateWarrior, CardClass.WARRIOR, "Warrior"),
+				new CompetitionEvaluation.Deck(Decks.MidrangeJadeShaman, CardClass.SHAMAN,  "Shaman"),
+			};
 
 			int[] totalWins = new int[agents.Count];
 			int[] totalGames = new int[agents.Count];
 			var runTimes = new List<long>();
 
-			Directory.CreateDirectory(ResultsDir);
-
 			string header =
-				$"Tournament Results – {DateTime.Now:yyyy-MM-dd HH:mm:ss}\n" +
-				$"Saved to: {SummaryFile}\n" +
+				$"Tournament: {group.Name} – {DateTime.Now:yyyy-MM-dd HH:mm:ss}\n" +
 				$"Runs: {numRuns} | Games per matchup: {GamesPerMatchup} | Threads: {NumThreads}\n" +
 				$"Agents: {string.Join(", ", agents.Select(a => a.AgentAuthor))}\n" +
 				new string('=', 60) + "\n";
 
-			File.WriteAllText(SummaryFile, header);
+			File.WriteAllText(groupSummaryFile, header);
 			Console.Write(header);
 
 			for (int run = 1; run <= numRuns; run++)
 			{
-				string runFile = Path.Combine(ResultsDir, $"results_run{run}_{RunTimestamp}.txt"); // ← ResultsDir, nie ProjectRoot
+				string runFile = Path.Combine(ResultsDir,
+					$"run_{group.Name}_r{run}_{RunTimestamp}.txt");
 
-				string runHeader = $"\n{new string('─', 60)}\nRUN {run}/{numRuns}\n{new string('─', 60)}\n";
-				AppendToSummary(runHeader);
+				string runHeader =
+					$"\n{new string('─', 60)}\nRUN {run}/{numRuns}\n{new string('─', 60)}\n";
+				AppendTo(groupSummaryFile, runHeader);
 
 				var sw = Stopwatch.StartNew();
 
@@ -149,20 +276,22 @@ namespace SabberStoneBasicAI
 				string runFooter =
 					$"Run {run} done in {sw.ElapsedMilliseconds / 1000.0:F1}s | " +
 					$"Total games: {competition.GetTotalGamesPlayed()}\n";
-				AppendToSummary(runFooter);
+				AppendTo(groupSummaryFile, runFooter);
 			}
 
-			string summary = BuildSummary(agents, totalWins, totalGames, numRuns, runTimes);
-			AppendToSummary(summary);
+			string summary = BuildSummary(group.Name, agents, totalWins, totalGames, numRuns, runTimes);
+			AppendTo(groupSummaryFile, summary);
 			Console.Write(summary);
 		}
-		private static void AppendToSummary(string message)
+
+		private static void AppendTo(string filePath, string message)
 		{
 			Console.Write(message);
-			File.AppendAllText(SummaryFile, message);
+			File.AppendAllText(filePath, message);
 		}
 
 		private static string BuildSummary(
+			string groupName,
 			List<Agent> agents,
 			int[] totalWins,
 			int[] totalGames,
@@ -171,7 +300,7 @@ namespace SabberStoneBasicAI
 		{
 			var sb = new System.Text.StringBuilder();
 			sb.AppendLine($"\n{new string('=', 60)}");
-			sb.AppendLine($"AGGREGATED SUMMARY ({numRuns} run(s))");
+			sb.AppendLine($"AGGREGATED SUMMARY – {groupName} ({numRuns} run(s))");
 			sb.AppendLine(new string('=', 60));
 			sb.AppendLine($"{"Agent",-40} {"Wins",8} {"Games",8} {"Win%",8}");
 			sb.AppendLine(new string('-', 60));
@@ -189,10 +318,12 @@ namespace SabberStoneBasicAI
 			return sb.ToString();
 		}
 
+		// ─── Metody pomocnicze (bez zmian) ────────────────────────────────────────
+
 		public static void TestPOGame()
 		{
 			Console.WriteLine("Setup gameConfig");
-			
+
 			var gameConfig = new GameConfig()
 			{
 				StartPlayer = 1,
@@ -211,7 +342,6 @@ namespace SabberStoneBasicAI
 			var gameHandler = new POGameHandler(gameConfig, player1, player2, repeatDraws: false);
 
 			Console.WriteLine("Simulate Games");
-			//gameHandler.PlayGame();
 			gameHandler.PlayGames(nr_of_games: 1000, addResultToGameStats: true, debug: false);
 			GameStats gameStats = gameHandler.getGameStats();
 
@@ -232,73 +362,73 @@ namespace SabberStoneBasicAI
 				Player1Name = "FitzVonGerald",
 				Player1HeroClass = CardClass.PALADIN,
 				Player1Deck = new List<Card>()
-						{
-						Cards.FromName("Blessing of Might"),
-						Cards.FromName("Blessing of Might"),
-						Cards.FromName("Gnomish Inventor"),
-						Cards.FromName("Gnomish Inventor"),
-						Cards.FromName("Goldshire Footman"),
-						Cards.FromName("Goldshire Footman"),
-						Cards.FromName("Hammer of Wrath"),
-						Cards.FromName("Hammer of Wrath"),
-						Cards.FromName("Hand of Protection"),
-						Cards.FromName("Hand of Protection"),
-						Cards.FromName("Holy Light"),
-						Cards.FromName("Holy Light"),
-						Cards.FromName("Ironforge Rifleman"),
-						Cards.FromName("Ironforge Rifleman"),
-						Cards.FromName("Light's Justice"),
-						Cards.FromName("Light's Justice"),
-						Cards.FromName("Lord of the Arena"),
-						Cards.FromName("Lord of the Arena"),
-						Cards.FromName("Nightblade"),
-						Cards.FromName("Nightblade"),
-						Cards.FromName("Raid Leader"),
-						Cards.FromName("Raid Leader"),
-						Cards.FromName("Stonetusk Boar"),
-						Cards.FromName("Stonetusk Boar"),
-						Cards.FromName("Stormpike Commando"),
-						Cards.FromName("Stormpike Commando"),
-						Cards.FromName("Stormwind Champion"),
-						Cards.FromName("Stormwind Champion"),
-						Cards.FromName("Stormwind Knight"),
-						Cards.FromName("Stormwind Knight")
-						},
+				{
+					Cards.FromName("Blessing of Might"),
+					Cards.FromName("Blessing of Might"),
+					Cards.FromName("Gnomish Inventor"),
+					Cards.FromName("Gnomish Inventor"),
+					Cards.FromName("Goldshire Footman"),
+					Cards.FromName("Goldshire Footman"),
+					Cards.FromName("Hammer of Wrath"),
+					Cards.FromName("Hammer of Wrath"),
+					Cards.FromName("Hand of Protection"),
+					Cards.FromName("Hand of Protection"),
+					Cards.FromName("Holy Light"),
+					Cards.FromName("Holy Light"),
+					Cards.FromName("Ironforge Rifleman"),
+					Cards.FromName("Ironforge Rifleman"),
+					Cards.FromName("Light's Justice"),
+					Cards.FromName("Light's Justice"),
+					Cards.FromName("Lord of the Arena"),
+					Cards.FromName("Lord of the Arena"),
+					Cards.FromName("Nightblade"),
+					Cards.FromName("Nightblade"),
+					Cards.FromName("Raid Leader"),
+					Cards.FromName("Raid Leader"),
+					Cards.FromName("Stonetusk Boar"),
+					Cards.FromName("Stonetusk Boar"),
+					Cards.FromName("Stormpike Commando"),
+					Cards.FromName("Stormpike Commando"),
+					Cards.FromName("Stormwind Champion"),
+					Cards.FromName("Stormwind Champion"),
+					Cards.FromName("Stormwind Knight"),
+					Cards.FromName("Stormwind Knight"),
+				},
 				Player2Name = "RehHausZuckFuchs",
 				Player2HeroClass = CardClass.PALADIN,
 				Player2Deck = new List<Card>()
-						{
-						Cards.FromName("Blessing of Might"),
-						Cards.FromName("Blessing of Might"),
-						Cards.FromName("Gnomish Inventor"),
-						Cards.FromName("Gnomish Inventor"),
-						Cards.FromName("Goldshire Footman"),
-						Cards.FromName("Goldshire Footman"),
-						Cards.FromName("Hammer of Wrath"),
-						Cards.FromName("Hammer of Wrath"),
-						Cards.FromName("Hand of Protection"),
-						Cards.FromName("Hand of Protection"),
-						Cards.FromName("Holy Light"),
-						Cards.FromName("Holy Light"),
-						Cards.FromName("Ironforge Rifleman"),
-						Cards.FromName("Ironforge Rifleman"),
-						Cards.FromName("Light's Justice"),
-						Cards.FromName("Light's Justice"),
-						Cards.FromName("Lord of the Arena"),
-						Cards.FromName("Lord of the Arena"),
-						Cards.FromName("Nightblade"),
-						Cards.FromName("Nightblade"),
-						Cards.FromName("Raid Leader"),
-						Cards.FromName("Raid Leader"),
-						Cards.FromName("Stonetusk Boar"),
-						Cards.FromName("Stonetusk Boar"),
-						Cards.FromName("Stormpike Commando"),
-						Cards.FromName("Stormpike Commando"),
-						Cards.FromName("Stormwind Champion"),
-						Cards.FromName("Stormwind Champion"),
-						Cards.FromName("Stormwind Knight"),
-						Cards.FromName("Stormwind Knight")
-						},
+				{
+					Cards.FromName("Blessing of Might"),
+					Cards.FromName("Blessing of Might"),
+					Cards.FromName("Gnomish Inventor"),
+					Cards.FromName("Gnomish Inventor"),
+					Cards.FromName("Goldshire Footman"),
+					Cards.FromName("Goldshire Footman"),
+					Cards.FromName("Hammer of Wrath"),
+					Cards.FromName("Hammer of Wrath"),
+					Cards.FromName("Hand of Protection"),
+					Cards.FromName("Hand of Protection"),
+					Cards.FromName("Holy Light"),
+					Cards.FromName("Holy Light"),
+					Cards.FromName("Ironforge Rifleman"),
+					Cards.FromName("Ironforge Rifleman"),
+					Cards.FromName("Light's Justice"),
+					Cards.FromName("Light's Justice"),
+					Cards.FromName("Lord of the Arena"),
+					Cards.FromName("Lord of the Arena"),
+					Cards.FromName("Nightblade"),
+					Cards.FromName("Nightblade"),
+					Cards.FromName("Raid Leader"),
+					Cards.FromName("Raid Leader"),
+					Cards.FromName("Stonetusk Boar"),
+					Cards.FromName("Stonetusk Boar"),
+					Cards.FromName("Stormpike Commando"),
+					Cards.FromName("Stormpike Commando"),
+					Cards.FromName("Stormwind Champion"),
+					Cards.FromName("Stormwind Champion"),
+					Cards.FromName("Stormwind Knight"),
+					Cards.FromName("Stormwind Knight"),
+				},
 				FillDecks = false,
 				Shuffle = true,
 				SkipMulligan = false,
@@ -322,32 +452,24 @@ namespace SabberStoneBasicAI
 				{
 					List<PlayerTask> options = game.CurrentPlayer.Options();
 					PlayerTask option = options[Rnd.Next(options.Count)];
-					//Console.WriteLine(option.FullPrint());
 					game.Process(option);
-
-
 				}
+
 				turns += game.Turn;
-				if (game.Player1.PlayState == PlayState.WON)
-					wins[0]++;
-				if (game.Player2.PlayState == PlayState.WON)
-					wins[1]++;
+				if (game.Player1.PlayState == PlayState.WON) wins[0]++;
+				if (game.Player2.PlayState == PlayState.WON) wins[1]++;
+
 				Console.WriteLine("game ended");
-				// Console.Write(game.PowerHistory.ToString());
-				using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"powerhistory.log")) {
-							file.WriteLine(game.PowerHistory.Print());
-				}
+
+				using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"powerhistory.log"))
+					file.WriteLine(game.PowerHistory.Print());
+
 				using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"logger.log"))
-				{
 					foreach (LogEntry log in game.Logs)
-					{
 						file.WriteLine(log.ToString());
-					}
-				}
 			}
 
 			watch.Stop();
-
 			Console.WriteLine($"{total} games with {turns} turns took {watch.ElapsedMilliseconds} ms => " +
 							  $"Avg. {watch.ElapsedMilliseconds / total} per game " +
 							  $"and {watch.ElapsedMilliseconds / (total * turns)} per turn!");
@@ -376,27 +498,27 @@ namespace SabberStoneBasicAI
 			var aiPlayer1 = new AggroScore();
 			var aiPlayer2 = new AggroScore();
 
-			game.Process(ChooseTask.Mulligan(game.Player1, aiPlayer1.MulliganRule().Invoke(game.Player1.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList())));
-			game.Process(ChooseTask.Mulligan(game.Player2, aiPlayer2.MulliganRule().Invoke(game.Player2.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList())));
+			game.Process(ChooseTask.Mulligan(game.Player1,
+				aiPlayer1.MulliganRule().Invoke(
+					game.Player1.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList())));
+			game.Process(ChooseTask.Mulligan(game.Player2,
+				aiPlayer2.MulliganRule().Invoke(
+					game.Player2.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList())));
 
 			game.MainReady();
 
 			while (game.CurrentPlayer == game.Player1)
 			{
 				Console.WriteLine($"* Calculating solutions *** Player 1 ***");
-
 				List<OptionNode> solutions = OptionNode.GetSolutions(game, game.Player1.Id, aiPlayer1, 10, 500);
-
 				var solution = new List<PlayerTask>();
 				solutions.OrderByDescending(p => p.Score).First().PlayerTasks(ref solution);
 				Console.WriteLine($"- Player 1 - <{game.CurrentPlayer.Name}> ---------------------------");
-
 				foreach (PlayerTask task in solution)
 				{
 					Console.WriteLine(task.FullPrint());
 					game.Process(task);
-					if (game.CurrentPlayer.Choice != null)
-						break;
+					if (game.CurrentPlayer.Choice != null) break;
 				}
 			}
 
@@ -426,8 +548,10 @@ namespace SabberStoneBasicAI
 			var aiPlayer1 = new AggroScore();
 			var aiPlayer2 = new AggroScore();
 
-			List<int> mulligan1 = aiPlayer1.MulliganRule().Invoke(game.Player1.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList());
-			List<int> mulligan2 = aiPlayer2.MulliganRule().Invoke(game.Player2.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList());
+			List<int> mulligan1 = aiPlayer1.MulliganRule().Invoke(
+				game.Player1.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList());
+			List<int> mulligan2 = aiPlayer2.MulliganRule().Invoke(
+				game.Player2.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList());
 
 			Console.WriteLine($"Player1: Mulligan {String.Join(",", mulligan1)}");
 			Console.WriteLine($"Player2: Mulligan {String.Join(",", mulligan2)}");
@@ -444,6 +568,7 @@ namespace SabberStoneBasicAI
 								  $"ROUND {(game.Turn + 1) / 2} - {game.CurrentPlayer.Name}");
 				Console.WriteLine($"Hero[P1]: {game.Player1.Hero.Health} / Hero[P2]: {game.Player2.Hero.Health}");
 				Console.WriteLine("");
+
 				while (game.State == State.RUNNING && game.CurrentPlayer == game.Player1)
 				{
 					Console.WriteLine($"* Calculating solutions *** Player 1 ***");
@@ -463,14 +588,9 @@ namespace SabberStoneBasicAI
 					}
 				}
 
-				// Random mode for Player 2
 				Console.WriteLine($"- Player 2 - <{game.CurrentPlayer.Name}> ---------------------------");
 				while (game.State == State.RUNNING && game.CurrentPlayer == game.Player2)
 				{
-					//var options = game.Options(game.CurrentPlayer);
-					//var option = options[Rnd.Next(options.Count)];
-					//Log.Info($"[{option.FullPrint()}]");
-					//game.Process(option);
 					Console.WriteLine($"* Calculating solutions *** Player 2 ***");
 					List<OptionNode> solutions = OptionNode.GetSolutions(game, game.Player2.Id, aiPlayer2, 10, 500);
 					var solution = new List<PlayerTask>();
@@ -489,12 +609,10 @@ namespace SabberStoneBasicAI
 				}
 			}
 			Console.WriteLine($"Game: {game.State}, Player1: {game.Player1.PlayState} / Player2: {game.Player2.PlayState}");
-
 		}
 
 		public static void TestFullGames()
 		{
-
 			int maxGames = 100;
 			int maxDepth = 10;
 			int maxWidth = 14;
@@ -507,73 +625,73 @@ namespace SabberStoneBasicAI
 				Player1Name = "FitzVonGerald",
 				Player1HeroClass = CardClass.PALADIN,
 				Player1Deck = new List<Card>()
-						{
-						Cards.FromName("Blessing of Might"),
-						Cards.FromName("Blessing of Might"),
-						Cards.FromName("Gnomish Inventor"),
-						Cards.FromName("Gnomish Inventor"),
-						Cards.FromName("Goldshire Footman"),
-						Cards.FromName("Goldshire Footman"),
-						Cards.FromName("Hammer of Wrath"),
-						Cards.FromName("Hammer of Wrath"),
-						Cards.FromName("Hand of Protection"),
-						Cards.FromName("Hand of Protection"),
-						Cards.FromName("Holy Light"),
-						Cards.FromName("Holy Light"),
-						Cards.FromName("Ironforge Rifleman"),
-						Cards.FromName("Ironforge Rifleman"),
-						Cards.FromName("Light's Justice"),
-						Cards.FromName("Light's Justice"),
-						Cards.FromName("Lord of the Arena"),
-						Cards.FromName("Lord of the Arena"),
-						Cards.FromName("Nightblade"),
-						Cards.FromName("Nightblade"),
-						Cards.FromName("Raid Leader"),
-						Cards.FromName("Raid Leader"),
-						Cards.FromName("Stonetusk Boar"),
-						Cards.FromName("Stonetusk Boar"),
-						Cards.FromName("Stormpike Commando"),
-						Cards.FromName("Stormpike Commando"),
-						Cards.FromName("Stormwind Champion"),
-						Cards.FromName("Stormwind Champion"),
-						Cards.FromName("Stormwind Knight"),
-						Cards.FromName("Stormwind Knight")
-						},
+				{
+					Cards.FromName("Blessing of Might"),
+					Cards.FromName("Blessing of Might"),
+					Cards.FromName("Gnomish Inventor"),
+					Cards.FromName("Gnomish Inventor"),
+					Cards.FromName("Goldshire Footman"),
+					Cards.FromName("Goldshire Footman"),
+					Cards.FromName("Hammer of Wrath"),
+					Cards.FromName("Hammer of Wrath"),
+					Cards.FromName("Hand of Protection"),
+					Cards.FromName("Hand of Protection"),
+					Cards.FromName("Holy Light"),
+					Cards.FromName("Holy Light"),
+					Cards.FromName("Ironforge Rifleman"),
+					Cards.FromName("Ironforge Rifleman"),
+					Cards.FromName("Light's Justice"),
+					Cards.FromName("Light's Justice"),
+					Cards.FromName("Lord of the Arena"),
+					Cards.FromName("Lord of the Arena"),
+					Cards.FromName("Nightblade"),
+					Cards.FromName("Nightblade"),
+					Cards.FromName("Raid Leader"),
+					Cards.FromName("Raid Leader"),
+					Cards.FromName("Stonetusk Boar"),
+					Cards.FromName("Stonetusk Boar"),
+					Cards.FromName("Stormpike Commando"),
+					Cards.FromName("Stormpike Commando"),
+					Cards.FromName("Stormwind Champion"),
+					Cards.FromName("Stormwind Champion"),
+					Cards.FromName("Stormwind Knight"),
+					Cards.FromName("Stormwind Knight"),
+				},
 				Player2Name = "RehHausZuckFuchs",
 				Player2HeroClass = CardClass.PALADIN,
 				Player2Deck = new List<Card>()
-						{
-						Cards.FromName("Blessing of Might"),
-						Cards.FromName("Blessing of Might"),
-						Cards.FromName("Gnomish Inventor"),
-						Cards.FromName("Gnomish Inventor"),
-						Cards.FromName("Goldshire Footman"),
-						Cards.FromName("Goldshire Footman"),
-						Cards.FromName("Hammer of Wrath"),
-						Cards.FromName("Hammer of Wrath"),
-						Cards.FromName("Hand of Protection"),
-						Cards.FromName("Hand of Protection"),
-						Cards.FromName("Holy Light"),
-						Cards.FromName("Holy Light"),
-						Cards.FromName("Ironforge Rifleman"),
-						Cards.FromName("Ironforge Rifleman"),
-						Cards.FromName("Light's Justice"),
-						Cards.FromName("Light's Justice"),
-						Cards.FromName("Lord of the Arena"),
-						Cards.FromName("Lord of the Arena"),
-						Cards.FromName("Nightblade"),
-						Cards.FromName("Nightblade"),
-						Cards.FromName("Raid Leader"),
-						Cards.FromName("Raid Leader"),
-						Cards.FromName("Stonetusk Boar"),
-						Cards.FromName("Stonetusk Boar"),
-						Cards.FromName("Stormpike Commando"),
-						Cards.FromName("Stormpike Commando"),
-						Cards.FromName("Stormwind Champion"),
-						Cards.FromName("Stormwind Champion"),
-						Cards.FromName("Stormwind Knight"),
-						Cards.FromName("Stormwind Knight")
-						},
+				{
+					Cards.FromName("Blessing of Might"),
+					Cards.FromName("Blessing of Might"),
+					Cards.FromName("Gnomish Inventor"),
+					Cards.FromName("Gnomish Inventor"),
+					Cards.FromName("Goldshire Footman"),
+					Cards.FromName("Goldshire Footman"),
+					Cards.FromName("Hammer of Wrath"),
+					Cards.FromName("Hammer of Wrath"),
+					Cards.FromName("Hand of Protection"),
+					Cards.FromName("Hand of Protection"),
+					Cards.FromName("Holy Light"),
+					Cards.FromName("Holy Light"),
+					Cards.FromName("Ironforge Rifleman"),
+					Cards.FromName("Ironforge Rifleman"),
+					Cards.FromName("Light's Justice"),
+					Cards.FromName("Light's Justice"),
+					Cards.FromName("Lord of the Arena"),
+					Cards.FromName("Lord of the Arena"),
+					Cards.FromName("Nightblade"),
+					Cards.FromName("Nightblade"),
+					Cards.FromName("Raid Leader"),
+					Cards.FromName("Raid Leader"),
+					Cards.FromName("Stonetusk Boar"),
+					Cards.FromName("Stonetusk Boar"),
+					Cards.FromName("Stormpike Commando"),
+					Cards.FromName("Stormpike Commando"),
+					Cards.FromName("Stormwind Champion"),
+					Cards.FromName("Stormwind Champion"),
+					Cards.FromName("Stormwind Knight"),
+					Cards.FromName("Stormwind Knight"),
+				},
 				FillDecks = false,
 				Shuffle = true,
 				SkipMulligan = false,
@@ -589,8 +707,10 @@ namespace SabberStoneBasicAI
 				var aiPlayer1 = new AggroScore();
 				var aiPlayer2 = new AggroScore();
 
-				List<int> mulligan1 = aiPlayer1.MulliganRule().Invoke(game.Player1.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList());
-				List<int> mulligan2 = aiPlayer2.MulliganRule().Invoke(game.Player2.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList());
+				List<int> mulligan1 = aiPlayer1.MulliganRule().Invoke(
+					game.Player1.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList());
+				List<int> mulligan2 = aiPlayer2.MulliganRule().Invoke(
+					game.Player2.Choice.Choices.Select(p => game.IdEntityDic[p]).ToList());
 
 				game.Process(ChooseTask.Mulligan(game.Player1, mulligan1));
 				game.Process(ChooseTask.Mulligan(game.Player2, mulligan2));
@@ -607,8 +727,7 @@ namespace SabberStoneBasicAI
 						foreach (PlayerTask task in solution)
 						{
 							game.Process(task);
-							if (game.CurrentPlayer.Choice != null)
-								break;
+							if (game.CurrentPlayer.Choice != null) break;
 						}
 					}
 					while (game.State == State.RUNNING && game.CurrentPlayer == game.Player2)
@@ -619,8 +738,7 @@ namespace SabberStoneBasicAI
 						foreach (PlayerTask task in solution)
 						{
 							game.Process(task);
-							if (game.CurrentPlayer.Choice != null)
-								break;
+							if (game.CurrentPlayer.Choice != null) break;
 						}
 					}
 				}
@@ -634,6 +752,5 @@ namespace SabberStoneBasicAI
 			Console.WriteLine($"Player1: {String.Join(",", player1Stats)}");
 			Console.WriteLine($"Player2: {String.Join(",", player2Stats)}");
 		}
-
 	}
 }

@@ -2,8 +2,11 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>netcoreapp2.1</TargetFramework>
+		<NuGetAudit>false</NuGetAudit>
 	</PropertyGroup>
+
 	<ItemGroup>
-		<ProjectReference Include="..\..\SabberStoneCore\SabberStoneCore.csproj" />
+		<ProjectReference Include="..\\..\\SabberStoneCore\\SabberStoneCore.csproj" />
+		<PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
 	</ItemGroup>
 </Project>

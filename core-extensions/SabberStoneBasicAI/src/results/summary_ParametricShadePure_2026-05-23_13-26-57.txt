@@ -1,0 +1,22 @@
+Tournament: ParametricShadePure – 2026-05-23 13:27:00
+Runs: 1 | Games per matchup: 500 | Threads: 12
+Agents: ParametricShadePure-1, ParametricShadePure-2, ParametricShadePure-3
+============================================================
+
+────────────────────────────────────────────────────────────
+RUN 1/1
+────────────────────────────────────────────────────────────
+Run 1 done in 1428.8s | Total games: 27000
+
+============================================================
+AGGREGATED SUMMARY – ParametricShadePure (1 run(s))
+============================================================
+Agent                                        Wins    Games     Win%
+------------------------------------------------------------
+ParametricShadePure-1                        9276    18000   51.53%
+ParametricShadePure-2                        9173    18000   50.96%
+ParametricShadePure-3                        8551    18000   47.51%
+------------------------------------------------------------
+Total wall time : 1428.8s
+Avg  per run    : 1428.8s
+============================================================

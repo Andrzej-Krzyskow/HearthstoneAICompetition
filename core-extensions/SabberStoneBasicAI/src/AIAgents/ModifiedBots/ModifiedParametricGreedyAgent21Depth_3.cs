@@ -1,0 +1,437 @@
+﻿/*
+TODO
+1. nowe parametry
+2. wybór zestawu -> arbitralnie lub z parametrami
+3. odpalanie pythona i porównanie wag
+
+ */
+
+using SabberStoneCore.Model.Entities;
+using SabberStoneCore.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using System.Globalization;
+using SabberStoneCore.Tasks.PlayerTasks;
+using SabberStoneBasicAI.PartialObservation;
+
+namespace SabberStoneBasicAI.AIAgents
+{
+	class ModifiedParametricGreedyAgent21Depth_3 : AbstractAgent
+	{
+		public override void FinalizeAgent()
+		{
+			
+		}
+
+		public override void FinalizeGame()
+		{
+			
+		}
+
+		public static int NUM_PARAMETERS = 21;
+		public int LookaheadDepth = 2;
+		public int MaxDepth = 3;
+		public int MinDepth = 1;
+		public int OptionsDepth3Threshold = 6;
+		public int OptionsDepth2Threshold = 14;
+		public int LookaheadNodeBudget = 200;
+		public bool UseBudgetBasedDepth = true;
+		public static string HERO_HEALTH_REDUCED = "HERO_HEALTH_REDUCED";
+		public static string HERO_ATTACK_REDUCED = "HERO_ATTACK_REDUCED";
+		public static string MINION_HEALTH_REDUCED = "MINION_HEALTH_REDUCED";
+		public static string MINION_ATTACK_REDUCED = "MINION_ATTACK_REDUCED";
+		public static string MINION_KILLED = "MINION_KILLED";
+		public static string MINION_APPEARED = "MINION_APPEARED";
+		public static string SECRET_REMOVED = "SECRET_REMOVED";
+		public static string MANA_REDUCED = "MANA_REDUCED";
+
+		public static string M_HEALTH = "M_HEALTH";
+		public static string M_ATTACK = "M_ATTACK";
+		//public static string M_HAS_BATTLECRY = "M_HAS_BATTLECRY";
+		public static string M_HAS_CHARGE = "M_HAS_CHARGE";
+		public static string M_HAS_DEAHTRATTLE = "M_HAS_DEAHTRATTLE";
+		public static string M_HAS_DIVINE_SHIELD = "M_HAS_DIVINE_SHIELD";
+		public static string M_HAS_INSPIRE = "M_HAS_INSPIRE";
+		public static string M_HAS_LIFE_STEAL = "M_HAS_LIFE_STEAL";
+		public static string M_HAS_STEALTH = "M_HAS_STEALTH";
+		public static string M_HAS_TAUNT = "M_HAS_TAUNT";
+		public static string M_HAS_WINDFURY = "M_HAS_WINDFURY";
+		public static string M_RARITY = "M_RARITY";
+		public static string M_MANA_COST = "M_MANA_COST";
+		public static string M_POISONOUS = "M_POISONOUS";		
+
+		public Dictionary<string, double> weights;
+
+
+		public override PlayerTask GetMove(POGame poGame)
+		{
+			debug("CURRENT TURN: " + poGame.Turn);
+			KeyValuePair<PlayerTask, double> p = getBestTask(poGame, LookaheadDepth);
+			debug("SELECTED TASK TO EXECUTE " + stringTask(p.Key) + " HAS A SCORE OF " + p.Value);
+			debug("-------------------------------------");
+			return p.Key;
+		}
+
+		//Mejor hacer esto con todas las posibles en cada movimiento
+		public double scoreTask(POGame before, POGame after) {
+			if (after == null) { //There was an exception with the simullation function!
+				return 1; //better than END_TURN, just in case
+			}
+			
+				if (after.CurrentOpponent.Hero.Health <= 0)
+				{
+					debug("KILLING ENEMY!!!!!!!!");
+					return Int32.MaxValue;
+				}
+				if (after.CurrentPlayer.Hero.Health <= 0)
+				{
+					debug("WARNING: KILLING MYSELF!!!!!");
+					return Int32.MinValue;
+				}
+			
+
+			//Differences in Health
+			debug("CALCULATING ENEMY HEALTH SCORE");
+			double enemyPoints = calculateScoreHero(before.CurrentOpponent,after.CurrentOpponent);
+			debug("CALCULATING MY HEALTH SCORE");
+			double myPoints    = calculateScoreHero(before.CurrentPlayer, after.CurrentPlayer);
+			debug("Enemy points: " + enemyPoints + " My points: " + myPoints);
+
+			//Differences in Minions
+			debug("CALCULATING ENEMY MINIONS");			
+			double scoreEnemyMinions = calculateScoreMinions(before.CurrentOpponent.BoardZone,after.CurrentOpponent.BoardZone);
+			debug("Score enemy minions: " +scoreEnemyMinions);
+			debug("CALCULATING MY MINIONS");
+			double scoreMyMinions = calculateScoreMinions(before.CurrentPlayer.BoardZone, after.CurrentPlayer.BoardZone);
+			debug("Score my minions: " + scoreMyMinions);
+
+			//Differences in Secrets
+			debug("CALCULATING SECRETS");			
+			double scoreEnemySecrets = calculateScoreSecretsRemoved(before.CurrentOpponent, after.CurrentOpponent);
+			double scoreMySecrets    = calculateScoreSecretsRemoved(before.CurrentPlayer, after.CurrentPlayer);
+
+
+			//Difference in Mana
+			int usedMana = before.CurrentPlayer.RemainingMana - after.CurrentPlayer.RemainingMana;
+			double scoreManaUsed = usedMana * weights[MANA_REDUCED];
+			debug("Final task score" + enemyPoints + ",neg("+ myPoints + ")," + scoreEnemyMinions + ",neg(" + scoreMyMinions+"),S:"+ scoreEnemySecrets+"neg( " +scoreMySecrets+ ") M:neg(:"+scoreManaUsed+")");			
+			return enemyPoints - myPoints + scoreEnemyMinions - scoreMyMinions+ scoreEnemySecrets - scoreMySecrets - scoreManaUsed;
+		}
+
+		double calculateScoreHero(Controller playerBefore, Controller playerAfter) {
+			debug(playerBefore.Hero.Health + "("+playerBefore.Hero.Armor+")/"+playerBefore.Hero.AttackDamage+" --> "+
+				 playerAfter.Hero.Health + "(" + playerAfter.Hero.Armor + ")/" + playerAfter.Hero.AttackDamage
+				);
+			int diffHealth = (playerBefore.Hero.Health + playerBefore.Hero.Armor) - (playerAfter.Hero.Health+playerAfter.Hero.Armor);
+			int diffAttack = (playerBefore.Hero.AttackDamage) - (playerAfter.Hero.AttackDamage);
+			//debug("DIFS"+diffHealth + " " + diffAttack);
+			double score = diffHealth * weights[HERO_HEALTH_REDUCED] + diffAttack * weights[HERO_ATTACK_REDUCED];
+			return score;
+		}
+
+		double calculateScoreMinions(SabberStoneCore.Model.Zones.BoardZone before, SabberStoneCore.Model.Zones.BoardZone after) {
+			foreach (Minion m in before.GetAll())
+			{
+				debug("BEFORE "+stringMinion(m));
+			}
+
+			foreach (Minion m in after.GetAll())
+			{
+				debug("AFTER  " +stringMinion(m));
+			}
+
+
+			double scoreHealthReduced = 0;
+			double scoreAttackReduced = 0; //We should add Divine shield removed?
+			double scoreKilled = 0;
+			double scoreAppeared = 0;
+
+			//Minions modified?
+			foreach (Minion mb in before.GetAll())
+			{
+				bool survived = false;
+				foreach (Minion ma in after.GetAll())
+				{
+					if (ma.Id == mb.Id)
+					{
+						scoreHealthReduced = scoreHealthReduced + weights[MINION_HEALTH_REDUCED]*(mb.Health - ma.Health)*scoreMinion(mb); //Positive points if health is reduced
+						scoreAttackReduced = scoreAttackReduced + weights[MINION_ATTACK_REDUCED]*(mb.AttackDamage - ma.AttackDamage)*scoreMinion(mb); //Positive points if attack is reduced
+						survived = true;
+						
+					}
+				}
+
+				if (survived == false)
+				{
+					debug(stringMinion(mb) + " was killed");
+					scoreKilled = scoreKilled + scoreMinion(mb)*weights[MINION_KILLED]; //WHATEVER //Positive points if card is dead
+				}
+
+			}
+
+			//New Minions on play?
+			foreach (Minion ma in after.GetAll())
+			{
+				bool existed = false;
+				foreach (Minion mb in before.GetAll())
+				{
+					if (ma.Id == mb.Id)
+					{
+						existed = true;
+					}
+				}
+				if (existed == false) {
+					debug(stringMinion(ma)+ " is NEW!!");
+					scoreAppeared = scoreAppeared + scoreMinion(ma)*weights[MINION_APPEARED]; //Negative if a minion appeared (below)
+				}
+			}
+
+			//Think always as positive points if the enemy suffers!
+			return scoreHealthReduced+scoreAttackReduced+scoreKilled-scoreAppeared; //CHANGE THESE SIGNS ACCORDINGLY!!!
+
+		}
+
+		double calculateScoreSecretsRemoved(Controller playerBefore, Controller playerAfter) {
+
+			int dif = playerBefore.SecretZone.Count - playerAfter.SecretZone.Count;
+			/*if (dif != 0) {
+				Console.WriteLine("STOP");
+			}*/
+			//int dif = playerBefore.NumSecretsPlayedThisGame - playerAfter.NumSecretsPlayedThisGame;
+			return dif * weights[SECRET_REMOVED];
+		}
+
+		double scoreMinion(Minion m) {
+			//return 1;
+
+			double score = m.Health*weights[M_HEALTH] + m.AttackDamage*weights[M_ATTACK];
+			/*if (m.HasBattleCry)
+				score = score + weights[M_HAS_BATTLECRY];*/
+			if (m.HasCharge)
+				score = score + weights[M_HAS_CHARGE];
+			if (m.HasDeathrattle)
+				score = score + weights[M_HAS_DEAHTRATTLE];
+			if (m.HasDivineShield) 
+				score = score + weights[M_HAS_DIVINE_SHIELD];
+			if (m.HasInspire)
+				score = score + weights[M_HAS_INSPIRE];
+			if (m.HasLifeSteal)
+				score = score + weights[M_HAS_LIFE_STEAL];
+			if (m.HasTaunt)
+				score = score + weights[M_HAS_TAUNT];
+			if (m.HasWindfury)
+				score = score + weights[M_HAS_WINDFURY];
+
+			
+
+			score = score + m.Card.Cost*weights[M_MANA_COST];
+			score = score + rarityToInt(m.Card) * weights[M_RARITY];
+			if (m.Poisonous) {
+				score = score + weights[M_POISONOUS];
+			}
+			return score;
+
+		}
+
+		public int rarityToInt(SabberStoneCore.Model.Card c) {
+			if (c.Rarity == SabberStoneCore.Enums.Rarity.COMMON)
+			{
+				return 1;
+			}
+			if (c.Rarity == SabberStoneCore.Enums.Rarity.FREE)
+			{
+				return 1;
+			}
+			if (c.Rarity == SabberStoneCore.Enums.Rarity.RARE)
+			{
+				return 2;
+			}
+			if (c.Rarity == SabberStoneCore.Enums.Rarity.EPIC)
+			{
+				return 3;
+			}
+			if (c.Rarity == SabberStoneCore.Enums.Rarity.LEGENDARY)
+			{
+				return 4;
+			}
+			return 0;
+		}
+
+		KeyValuePair<PlayerTask, double> getBestTask(POGame state, int depth)
+		{
+			double bestScore = Double.MinValue;
+			PlayerTask bestTask = null;
+
+			List<PlayerTask> list = state.CurrentPlayer.Options();
+
+			foreach (PlayerTask t in list)
+			{
+				debug("---->POSSIBLE " + stringTask(t));
+
+				double score = evaluateSequence(state, t, depth);
+
+				debug("SEQUENCE SCORE " + score);
+
+				if (score >= bestScore)
+				{
+					bestTask = t;
+					bestScore = score;
+				}
+			}
+
+			return new KeyValuePair<PlayerTask, double>(bestTask, bestScore);
+		}
+
+		double evaluateSequence(POGame state, PlayerTask task, int depthLeft)
+		{
+			if (task.PlayerTaskType == PlayerTaskType.END_TURN)
+				return 0;
+
+			List<PlayerTask> toSimulate = new List<PlayerTask>();
+			toSimulate.Add(task);
+
+			Dictionary<PlayerTask, POGame> simulated = state.Simulate(toSimulate);
+			POGame nextState = simulated[task];
+
+			if (nextState == null)
+				return 1;
+
+			double immediateScore = scoreTask(state, nextState);
+
+			if (depthLeft <= 1)
+				return immediateScore;
+
+			if (!isSamePlayersTurn(state, nextState))
+				return immediateScore;
+
+			double bestContinuation = 0;
+
+			List<PlayerTask> nextOptions = nextState.CurrentPlayer.Options();
+			foreach (PlayerTask nextTask in nextOptions)
+			{
+				double continuationScore = evaluateSequence(nextState, nextTask, depthLeft - 1);
+				if (continuationScore > bestContinuation)
+					bestContinuation = continuationScore;
+			}
+
+			return immediateScore + bestContinuation;
+		}
+
+		bool isSamePlayersTurn(POGame before, POGame after)
+		{
+			if (after == null)
+				return false;
+
+			return before.CurrentPlayer.PlayerId == after.CurrentPlayer.PlayerId;
+		}
+
+		int chooseDepth(POGame state)
+		{
+			int options = state.CurrentPlayer.Options().Count;
+
+			if (!UseBudgetBasedDepth)
+			{
+				if (options <= OptionsDepth3Threshold)
+					return Math.Min(MaxDepth, 3);
+
+				if (options <= OptionsDepth2Threshold)
+					return Math.Min(MaxDepth, 2);
+
+				return MinDepth;
+			}
+
+			int bestDepth = MinDepth;
+			long estimatedNodes = 0;
+			long levelNodes = 1;
+
+			for (int depth = 1; depth <= MaxDepth; depth++)
+			{
+				levelNodes *= Math.Max(1, options);
+				estimatedNodes += levelNodes;
+
+				if (estimatedNodes <= LookaheadNodeBudget)
+					bestDepth = depth;
+				else
+					break;
+			}
+
+			if (bestDepth < MinDepth)
+				bestDepth = MinDepth;
+
+			return bestDepth;
+		}
+
+		public override void InitializeAgent()
+		{
+			debug("INITIALIZING AGENT (ONLY ONCE)");
+			setAgeintWeightsFromString("0.6739726238259904#0.9199767366588426#0.08995666093981902#0.12448274135600074#0.7729455339849768#0.9386770200239738#0.9845672964122332#0.07639886625862823#0.794961914061259#0.9189082671287258#0.6810204240258513#0.7978347262446167#0.08753484473823436#0.17493849996931868#0.5307354154991204#0.8381219843615074#0.8588883776338316#0.8318600847113204#0.07871283419438468#0.7006526166731527#0.8543568905516958");
+
+		}
+
+		public void setAgentWeights(double[] w) {
+			this.weights = new Dictionary<string, double>();
+			this.weights.Add(HERO_HEALTH_REDUCED, w[0]);
+			this.weights.Add(HERO_ATTACK_REDUCED, w[1]);
+			this.weights.Add(MINION_HEALTH_REDUCED, w[2]);
+			this.weights.Add(MINION_ATTACK_REDUCED, w[3]);
+			this.weights.Add(MINION_APPEARED, w[4]);
+			this.weights.Add(MINION_KILLED, w[5]);
+			this.weights.Add(SECRET_REMOVED, w[6]);
+			this.weights.Add(MANA_REDUCED, w[7]);
+			this.weights.Add(M_HEALTH, w[8]);
+			this.weights.Add(M_ATTACK, w[9]);
+			this.weights.Add(M_HAS_CHARGE, w[10]);
+			this.weights.Add(M_HAS_DEAHTRATTLE, w[11]);
+			this.weights.Add(M_HAS_DIVINE_SHIELD, w[12]);
+			this.weights.Add(M_HAS_INSPIRE, w[13]);
+			this.weights.Add(M_HAS_LIFE_STEAL, w[14]);
+			this.weights.Add(M_HAS_STEALTH, w[15]);
+			this.weights.Add(M_HAS_TAUNT, w[16]);
+			this.weights.Add(M_HAS_WINDFURY, w[17]);
+			this.weights.Add(M_RARITY, w[18]);
+			this.weights.Add(M_MANA_COST, w[19]);
+			this.weights.Add(M_POISONOUS, w[20]);
+
+		}
+
+		public void setAgeintWeightsFromString(string weights) {
+			debug("Setting agent weights from string");
+			string[] vs = weights.Split("#");
+
+			if (vs.Length != ModifiedParametricGreedyAgent21Depth.NUM_PARAMETERS)
+				throw new Exception("NUM VALUES NOT CORRECT");
+
+			double[] ws = new double[ModifiedParametricGreedyAgent21Depth.NUM_PARAMETERS];
+			for (int i = 0; i < ws.Length; i++)
+			{
+				ws[i] = Double.Parse(vs[i], CultureInfo.InvariantCulture);
+			}
+
+			this.setAgentWeights(ws);
+		}
+		public override void InitializeGame()
+		{
+			
+		}
+
+		private string stringTask(PlayerTask task) {
+			string t = "TASK: " + task.PlayerTaskType + " " + task.Source + "----->" + task.Target;
+			if (task.Target != null)
+				t=t+task.Target.Controller.PlayerId;
+			else
+				t=t+"No target";
+			return t;
+		}
+
+		private string stringMinion(Minion m) {
+			return m+" "+m.AttackDamage+"/"+m.Health;
+		}
+
+		private void debug(string line) {
+			if(false)
+				Console.WriteLine(line);
+		}
+	}
+}
