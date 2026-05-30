@@ -68,7 +68,9 @@ namespace SabberStoneBasicAI.AIAgents
 		public override PlayerTask GetMove(POGame poGame)
 		{
 			debug("CURRENT TURN: " + poGame.Turn);
-			KeyValuePair<PlayerTask, double> p = getBestTask(poGame, LookaheadDepth);
+			int depth = chooseDepth(poGame);
+			debug("CHOSEN LOOKAHEAD DEPTH: " + depth);
+			KeyValuePair<PlayerTask, double> p = getBestTask(poGame, depth);
 			debug("SELECTED TASK TO EXECUTE " + stringTask(p.Key) + " HAS A SCORE OF " + p.Value);
 			debug("-------------------------------------");
 			return p.Key;
@@ -331,36 +333,18 @@ namespace SabberStoneBasicAI.AIAgents
 		{
 			int options = state.CurrentPlayer.Options().Count;
 
-			if (!UseBudgetBasedDepth)
-			{
-				if (options <= OptionsDepth3Threshold)
-					return Math.Min(MaxDepth, 3);
+			// Match Miller lookahead policy:
+			// options >= 25 -> depth 1, options >= 5 -> depth 2, else depth 3.
+			int depth = options >= 5
+				? (options >= 25 ? 1 : 2)
+				: 3;
 
-				if (options <= OptionsDepth2Threshold)
-					return Math.Min(MaxDepth, 2);
+			if (depth > MaxDepth)
+				depth = MaxDepth;
+			if (depth < MinDepth)
+				depth = MinDepth;
 
-				return MinDepth;
-			}
-
-			int bestDepth = MinDepth;
-			long estimatedNodes = 0;
-			long levelNodes = 1;
-
-			for (int depth = 1; depth <= MaxDepth; depth++)
-			{
-				levelNodes *= Math.Max(1, options);
-				estimatedNodes += levelNodes;
-
-				if (estimatedNodes <= LookaheadNodeBudget)
-					bestDepth = depth;
-				else
-					break;
-			}
-
-			if (bestDepth < MinDepth)
-				bestDepth = MinDepth;
-
-			return bestDepth;
+			return depth;
 		}
 
 		public override void InitializeAgent()

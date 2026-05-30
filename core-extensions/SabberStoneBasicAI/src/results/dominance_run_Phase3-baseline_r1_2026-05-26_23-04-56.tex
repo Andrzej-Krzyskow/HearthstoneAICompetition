@@ -1,0 +1,12 @@
+% Requires packages: tikz
+% Recommended tikz libs: arrows.meta, positioning
+% Auto-generated dominance graph: run\_Phase3-baseline\_r1\_2026-05-26\_23-04-56
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth, every node/.style={font=\scriptsize}]
+\node[draw, circle, minimum size=10mm, fill=white] (A0) at (0.000,-4.200) {ParametricGreedyBaseline};
+\node[draw, circle, minimum size=10mm, fill=white] (A1) at (0.000,4.200) {MyAgentSebastianMiller2Naive};
+\draw[->, line width=1.39pt, draw=blue!55] (A1) to[bend left=12] node[midway, fill=white, inner sep=1pt] {65.3\%} (A0);
+\end{tikzpicture}
+\caption{Directed dominance graph for run\_Phase3-baseline\_r1\_2026-05-26\_23-04-56. Edge A $\to$ B exists when WR(A,B) $>$ 50\%, and edge width scales with WR-50\%.}
+\end{figure}

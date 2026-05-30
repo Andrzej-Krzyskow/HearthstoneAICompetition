@@ -1,0 +1,216 @@
+Detailed report: run_Phase2_r1_2026-05-25_09-56-19
+Competition type: RoundRobin_DeckPlaying
+Agents: 6 | Decks: 3
+==========================================================================================
+
+AGENT LABELS (SHORT -> FULL THESIS NAME)
+------------------------------------------------------------------------------------------
+bazowy 21                -> Wariant bazowy 21 parametrow
+63 parametry             -> Wariant 63 parametrow - trojfazowy agent
+63 plynny                -> Wariant 63 parametrow z plynnym przejsciem
+28 parametrow            -> Wariant 28 parametrow - rozszerzony zestaw cech
+28 znormalizowany        -> Wariant 28 parametrow z normalizacja cech
+21 glebokosciowy         -> Wariant 21 parametrow z przeszukiwaniem glebokosciowym
+
+PAIRWISE (ALL DECKS AGGREGATED)
+------------------------------------------------------------------------------------------
+Agent A                                  Agent B                                   WinsA  WinsB  Games    WR_A
+------------------------------------------------------------------------------------------
+bazowy 21                                63 parametry                               9027   8973  18000  50.15%
+bazowy 21                                63 plynny                                  8756   9244  18000  48.64%
+bazowy 21                                28 parametrow                              8373   9627  18000  46.52%
+bazowy 21                                28 znormalizowany                          8826   9174  18000  49.03%
+bazowy 21                                21 glebokosciowy                           6896  11104  18000  38.31%
+63 parametry                             63 plynny                                  8721   9279  18000  48.45%
+63 parametry                             28 parametrow                              8362   9638  18000  46.46%
+63 parametry                             28 znormalizowany                          8831   9169  18000  49.06%
+63 parametry                             21 glebokosciowy                           6828  11172  18000  37.93%
+63 plynny                                28 parametrow                              8587   9413  18000  47.71%
+63 plynny                                28 znormalizowany                          8921   9079  18000  49.56%
+63 plynny                                21 glebokosciowy                           7005  10995  18000  38.92%
+28 parametrow                            28 znormalizowany                          9468   8532  18000  52.60%
+28 parametrow                            21 glebokosciowy                           7349  10651  18000  40.83%
+28 znormalizowany                        21 glebokosciowy                           6999  11001  18000  38.88%
+
+DECK x DECK BREAKDOWN FOR EACH AGENT PAIR
+------------------------------------------------------------------------------------------
+bazowy 21  VS  63 parametry
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                 1005    995   2000  50.25%
+Mage               Warrior              1457    543   2000  72.85%
+Mage               Shaman                987   1013   2000  49.35%
+Warrior            Mage                  714   1286   2000  35.70%
+Warrior            Warrior               974   1026   2000  48.70%
+Warrior            Shaman                969   1031   2000  48.45%
+Shaman             Mage                  974   1026   2000  48.70%
+Shaman             Warrior               990   1010   2000  49.50%
+Shaman             Shaman                957   1043   2000  47.85%
+------------------------------------------------------------------------------------------
+bazowy 21  VS  63 plynny
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  987   1013   2000  49.35%
+Mage               Warrior              1373    627   2000  68.65%
+Mage               Shaman               1015    985   2000  50.75%
+Warrior            Mage                  663   1337   2000  33.15%
+Warrior            Warrior               982   1018   2000  49.10%
+Warrior            Shaman                988   1012   2000  49.40%
+Shaman             Mage                  933   1067   2000  46.65%
+Shaman             Warrior               860   1140   2000  43.00%
+Shaman             Shaman                955   1045   2000  47.75%
+------------------------------------------------------------------------------------------
+bazowy 21  VS  28 parametrow
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  946   1054   2000  47.30%
+Mage               Warrior              1351    649   2000  67.55%
+Mage               Shaman                967   1033   2000  48.35%
+Warrior            Mage                  579   1421   2000  28.95%
+Warrior            Warrior               893   1107   2000  44.65%
+Warrior            Shaman                908   1092   2000  45.40%
+Shaman             Mage                  879   1121   2000  43.95%
+Shaman             Warrior               882   1118   2000  44.10%
+Shaman             Shaman                968   1032   2000  48.40%
+------------------------------------------------------------------------------------------
+bazowy 21  VS  28 znormalizowany
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  959   1041   2000  47.95%
+Mage               Warrior              1370    630   2000  68.50%
+Mage               Shaman                941   1059   2000  47.05%
+Warrior            Mage                  622   1378   2000  31.10%
+Warrior            Warrior               984   1016   2000  49.20%
+Warrior            Shaman                966   1034   2000  48.30%
+Shaman             Mage                  923   1077   2000  46.15%
+Shaman             Warrior               977   1023   2000  48.85%
+Shaman             Shaman               1084    916   2000  54.20%
+------------------------------------------------------------------------------------------
+bazowy 21  VS  21 glebokosciowy
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  774   1226   2000  38.70%
+Mage               Warrior              1273    727   2000  63.65%
+Mage               Shaman                812   1188   2000  40.60%
+Warrior            Mage                  496   1504   2000  24.80%
+Warrior            Warrior               754   1246   2000  37.70%
+Warrior            Shaman                743   1257   2000  37.15%
+Shaman             Mage                  597   1403   2000  29.85%
+Shaman             Warrior               753   1247   2000  37.65%
+Shaman             Shaman                694   1306   2000  34.70%
+------------------------------------------------------------------------------------------
+63 parametry  VS  63 plynny
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  947   1053   2000  47.35%
+Mage               Warrior              1229    771   2000  61.45%
+Mage               Shaman               1036    964   2000  51.80%
+Warrior            Mage                  663   1337   2000  33.15%
+Warrior            Warrior               987   1013   2000  49.35%
+Warrior            Shaman                993   1007   2000  49.65%
+Shaman             Mage                  960   1040   2000  48.00%
+Shaman             Warrior               928   1072   2000  46.40%
+Shaman             Shaman                978   1022   2000  48.90%
+------------------------------------------------------------------------------------------
+63 parametry  VS  28 parametrow
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  883   1117   2000  44.15%
+Mage               Warrior              1223    777   2000  61.15%
+Mage               Shaman                995   1005   2000  49.75%
+Warrior            Mage                  579   1421   2000  28.95%
+Warrior            Warrior               876   1124   2000  43.80%
+Warrior            Shaman               1017    983   2000  50.85%
+Shaman             Mage                  874   1126   2000  43.70%
+Shaman             Warrior               945   1055   2000  47.25%
+Shaman             Shaman                970   1030   2000  48.50%
+------------------------------------------------------------------------------------------
+63 parametry  VS  28 znormalizowany
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  947   1053   2000  47.35%
+Mage               Warrior              1283    717   2000  64.15%
+Mage               Shaman               1011    989   2000  50.55%
+Warrior            Mage                  580   1420   2000  29.00%
+Warrior            Warrior              1011    989   2000  50.55%
+Warrior            Shaman                964   1036   2000  48.20%
+Shaman             Mage                  969   1031   2000  48.45%
+Shaman             Warrior               983   1017   2000  49.15%
+Shaman             Shaman               1083    917   2000  54.15%
+------------------------------------------------------------------------------------------
+63 parametry  VS  21 glebokosciowy
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  718   1282   2000  35.90%
+Mage               Warrior              1165    835   2000  58.25%
+Mage               Shaman                778   1222   2000  38.90%
+Warrior            Mage                  454   1546   2000  22.70%
+Warrior            Warrior               755   1245   2000  37.75%
+Warrior            Shaman                805   1195   2000  40.25%
+Shaman             Mage                  633   1367   2000  31.65%
+Shaman             Warrior               779   1221   2000  38.95%
+Shaman             Shaman                741   1259   2000  37.05%
+------------------------------------------------------------------------------------------
+63 plynny  VS  28 parametrow
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  931   1069   2000  46.55%
+Mage               Warrior              1296    704   2000  64.80%
+Mage               Shaman               1062    938   2000  53.10%
+Warrior            Mage                  556   1444   2000  27.80%
+Warrior            Warrior               888   1112   2000  44.40%
+Warrior            Shaman               1095    905   2000  54.75%
+Shaman             Mage                  838   1162   2000  41.90%
+Shaman             Warrior               920   1080   2000  46.00%
+Shaman             Shaman               1001    999   2000  50.05%
+------------------------------------------------------------------------------------------
+63 plynny  VS  28 znormalizowany
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  971   1029   2000  48.55%
+Mage               Warrior              1323    677   2000  66.15%
+Mage               Shaman               1042    958   2000  52.10%
+Warrior            Mage                  627   1373   2000  31.35%
+Warrior            Warrior               997   1003   2000  49.85%
+Warrior            Shaman               1026    974   2000  51.30%
+Shaman             Mage                  868   1132   2000  43.40%
+Shaman             Warrior               957   1043   2000  47.85%
+Shaman             Shaman               1110    890   2000  55.50%
+------------------------------------------------------------------------------------------
+63 plynny  VS  21 glebokosciowy
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  721   1279   2000  36.05%
+Mage               Warrior              1208    792   2000  60.40%
+Mage               Shaman                872   1128   2000  43.60%
+Warrior            Mage                  508   1492   2000  25.40%
+Warrior            Warrior               787   1213   2000  39.35%
+Warrior            Shaman                856   1144   2000  42.80%
+Shaman             Mage                  593   1407   2000  29.65%
+Shaman             Warrior               773   1227   2000  38.65%
+Shaman             Shaman                687   1313   2000  34.35%
+------------------------------------------------------------------------------------------
+28 parametrow  VS  28 znormalizowany
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                 1071    929   2000  53.55%
+Mage               Warrior              1445    555   2000  72.25%
+Mage               Shaman               1125    875   2000  56.25%
+Warrior            Mage                  619   1381   2000  30.95%
+Warrior            Warrior              1087    913   2000  54.35%
+Warrior            Shaman               1089    911   2000  54.45%
+Shaman             Mage                  938   1062   2000  46.90%
+Shaman             Warrior               990   1010   2000  49.50%
+Shaman             Shaman               1104    896   2000  55.20%
+------------------------------------------------------------------------------------------
+28 parametrow  VS  21 glebokosciowy
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  828   1172   2000  41.40%
+Mage               Warrior              1299    701   2000  64.95%
+Mage               Shaman                913   1087   2000  45.65%
+Warrior            Mage                  540   1460   2000  27.00%
+Warrior            Warrior               815   1185   2000  40.75%
+Warrior            Shaman                872   1128   2000  43.60%
+Shaman             Mage                  599   1401   2000  29.95%
+Shaman             Warrior               778   1222   2000  38.90%
+Shaman             Shaman                705   1295   2000  35.25%
+------------------------------------------------------------------------------------------
+28 znormalizowany  VS  21 glebokosciowy
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  787   1213   2000  39.35%
+Mage               Warrior              1298    702   2000  64.90%
+Mage               Shaman                853   1147   2000  42.65%
+Warrior            Mage                  507   1493   2000  25.35%
+Warrior            Warrior               758   1242   2000  37.90%
+Warrior            Shaman                775   1225   2000  38.75%
+Shaman             Mage                  611   1389   2000  30.55%
+Shaman             Warrior               781   1219   2000  39.05%
+Shaman             Shaman                629   1371   2000  31.45%
+------------------------------------------------------------------------------------------

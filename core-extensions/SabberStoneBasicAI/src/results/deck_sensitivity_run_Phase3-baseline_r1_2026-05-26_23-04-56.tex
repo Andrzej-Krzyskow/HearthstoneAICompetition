@@ -1,0 +1,30 @@
+% Requires packages: tikz, booktabs
+% Auto-generated deck sensitivity profile: run\_Phase3-baseline\_r1\_2026-05-26\_23-04-56
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Agent & Min WR (\%) & Mean WR (\%) & Max WR (\%) & StdDev & Range \\
+\midrule
+ParametricGreedyBaseline & 25.77 & 34.72 & 44.30 & 7.58 & 18.53\\
+MyAgentSebastianMiller2Naive & 58.28 & 65.28 & 72.20 & 5.68 & 13.92\\
+\bottomrule
+\end{tabular}
+\caption{Deck sensitivity summary for run\_Phase3-baseline\_r1\_2026-05-26\_23-04-56. Larger range/std means stronger deck dependence (meta-fragility).}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[x=0.12cm,y=0.9cm]
+\draw[->] (0,0) -- (102,0) node[right] {Win rate (\%)};
+\foreach \x in {0,10,...,100} \draw (\x,0.08) -- (\x,-0.08) node[below, font=\tiny] {\x};
+\draw[thick, gray!70] (58.28,1) -- (72.20,1);
+\filldraw[blue!70] (65.28,1) circle (1.7pt);
+\node[anchor=east, font=\tiny] at (-1,1) {MyAgentSebastianMiller2Naive};
+\draw[thick, gray!70] (25.77,2) -- (44.30,2);
+\filldraw[blue!70] (34.72,2) circle (1.7pt);
+\node[anchor=east, font=\tiny] at (-1,2) {ParametricGreedyBaseline};
+\end{tikzpicture}
+\caption{Deck-sensitivity interval profile for run\_Phase3-baseline\_r1\_2026-05-26\_23-04-56. Gray segment = [min,max] WR across own deck choices, blue dot = mean.}
+\end{figure}

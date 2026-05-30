@@ -1,0 +1,30 @@
+RoundRobin_DeckPlaying
+
+Agents
+MPA21Depth-best-shade-pure-3
+MyAgentSebastianMiller2Naive
+
+Decks
+Mage
+Warrior
+Shaman
+
+Match Results
+Match Result: 0 1 0 0 11 9 0 0 308 288 141 159
+Match Result: 0 1 0 1 19 1 0 0 397 18 443 19
+Match Result: 0 1 0 2 12 8 0 0 273 187 247 139
+Match Result: 0 1 1 0 8 12 0 0 100 254 215 312
+Match Result: 0 1 1 1 6 14 0 0 90 220 97 189
+Match Result: 0 1 1 2 14 6 0 0 172 114 369 67
+Match Result: 0 1 2 0 8 12 0 0 188 316 160 207
+Match Result: 0 1 2 1 10 10 0 0 198 150 177 250
+Match Result: 0 1 2 2 11 9 0 0 217 216 259 164
+Match Result: 1 0 0 0 13 7 0 0 370 200 218 101
+Match Result: 1 0 0 1 16 4 0 0 356 66 312 89
+Match Result: 1 0 0 2 13 7 0 0 345 185 328 130
+Match Result: 1 0 1 0 6 14 0 0 78 312 158 243
+Match Result: 1 0 1 1 15 5 0 0 213 76 239 73
+Match Result: 1 0 1 2 10 10 0 0 136 220 239 167
+Match Result: 1 0 2 0 14 6 0 0 254 152 290 141
+Match Result: 1 0 2 1 12 8 0 0 215 130 238 160
+Match Result: 1 0 2 2 11 9 0 0 222 196 226 169

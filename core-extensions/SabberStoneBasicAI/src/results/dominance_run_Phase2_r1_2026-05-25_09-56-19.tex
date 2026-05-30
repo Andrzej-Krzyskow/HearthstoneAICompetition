@@ -1,0 +1,30 @@
+% Requires packages: tikz
+% Recommended tikz libs: arrows.meta, positioning
+% Auto-generated dominance graph: run\_Phase2\_r1\_2026-05-25\_09-56-19
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=Stealth, every node/.style={font=\scriptsize}]
+\node[draw, circle, minimum size=10mm, fill=white] (A0) at (0.000,-4.200) {bazowy 21};
+\node[draw, circle, minimum size=10mm, fill=white] (A1) at (3.637,-2.100) {63 parametry};
+\node[draw, circle, minimum size=10mm, fill=white] (A2) at (3.637,2.100) {63 plynny};
+\node[draw, circle, minimum size=10mm, fill=white] (A3) at (0.000,4.200) {28 parametrow};
+\node[draw, circle, minimum size=10mm, fill=white] (A4) at (-3.637,2.100) {28 znormalizowany};
+\node[draw, circle, minimum size=10mm, fill=white] (A5) at (-3.637,-2.100) {21 glebokosciowy};
+\draw[->, line width=0.61pt, draw=blue!35] (A0) to[bend left=12] node[midway, fill=white, inner sep=1pt] {50.2\%} (A1);
+\draw[->, line width=0.67pt, draw=blue!37] (A2) to[bend left=12] node[midway, fill=white, inner sep=1pt] {51.4\%} (A0);
+\draw[->, line width=0.78pt, draw=blue!40] (A3) to[bend left=12] node[midway, fill=white, inner sep=1pt] {53.5\%} (A0);
+\draw[->, line width=0.65pt, draw=blue!36] (A4) to[bend left=12] node[midway, fill=white, inner sep=1pt] {51.0\%} (A0);
+\draw[->, line width=1.21pt, draw=blue!50] (A5) to[bend left=12] node[midway, fill=white, inner sep=1pt] {61.7\%} (A0);
+\draw[->, line width=0.68pt, draw=blue!37] (A2) to[bend left=12] node[midway, fill=white, inner sep=1pt] {51.6\%} (A1);
+\draw[->, line width=0.78pt, draw=blue!40] (A3) to[bend left=12] node[midway, fill=white, inner sep=1pt] {53.5\%} (A1);
+\draw[->, line width=0.65pt, draw=blue!36] (A4) to[bend left=12] node[midway, fill=white, inner sep=1pt] {50.9\%} (A1);
+\draw[->, line width=1.23pt, draw=blue!51] (A5) to[bend left=12] node[midway, fill=white, inner sep=1pt] {62.1\%} (A1);
+\draw[->, line width=0.72pt, draw=blue!38] (A3) to[bend left=12] node[midway, fill=white, inner sep=1pt] {52.3\%} (A2);
+\draw[->, line width=0.62pt, draw=blue!36] (A4) to[bend left=12] node[midway, fill=white, inner sep=1pt] {50.4\%} (A2);
+\draw[->, line width=1.18pt, draw=blue!49] (A5) to[bend left=12] node[midway, fill=white, inner sep=1pt] {61.1\%} (A2);
+\draw[->, line width=0.74pt, draw=blue!38] (A3) to[bend left=12] node[midway, fill=white, inner sep=1pt] {52.6\%} (A4);
+\draw[->, line width=1.08pt, draw=blue!47] (A5) to[bend left=12] node[midway, fill=white, inner sep=1pt] {59.2\%} (A3);
+\draw[->, line width=1.18pt, draw=blue!49] (A5) to[bend left=12] node[midway, fill=white, inner sep=1pt] {61.1\%} (A4);
+\end{tikzpicture}
+\caption{Directed dominance graph for run\_Phase2\_r1\_2026-05-25\_09-56-19. Edge A $\to$ B exists when WR(A,B) $>$ 50\%, and edge width scales with WR-50\%.}
+\end{figure}

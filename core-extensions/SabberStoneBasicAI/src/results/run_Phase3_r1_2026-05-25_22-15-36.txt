@@ -1,0 +1,67 @@
+RoundRobin_DeckPlaying
+
+Agents
+MPA21Depth-best-shade-pure-3
+MyAgentSebastianMiller2Naive
+GretiveComp
+
+Decks
+Mage
+Warrior
+Shaman
+
+Match Results
+Match Result: 0 1 0 0 9 11 0 0 246 304 150 158
+Match Result: 0 1 0 1 17 3 0 0 349 42 339 79
+Match Result: 0 1 0 2 12 8 0 0 280 191 294 139
+Match Result: 0 1 1 0 4 16 0 0 52 344 95 315
+Match Result: 0 1 1 1 9 11 0 0 119 152 196 203
+Match Result: 0 1 1 2 13 7 0 0 173 134 303 106
+Match Result: 0 1 2 0 8 12 0 0 168 297 146 198
+Match Result: 0 1 2 1 8 12 0 0 154 184 116 221
+Match Result: 0 1 2 2 11 9 0 0 223 208 254 137
+Match Result: 0 2 0 0 9 11 0 0 213 327 169 168
+Match Result: 0 2 0 1 14 6 0 0 278 96 228 132
+Match Result: 0 2 0 2 10 10 0 0 254 223 214 166
+Match Result: 0 2 1 0 8 12 0 0 100 270 229 327
+Match Result: 0 2 1 1 12 8 0 0 152 114 197 85
+Match Result: 0 2 1 2 14 6 0 0 206 109 311 87
+Match Result: 0 2 2 0 5 15 0 0 97 384 121 314
+Match Result: 0 2 2 1 12 8 0 0 174 122 205 159
+Match Result: 0 2 2 2 15 5 0 0 322 114 331 68
+Match Result: 1 0 0 0 11 9 0 0 312 251 169 123
+Match Result: 1 0 0 1 19 1 0 0 411 16 438 25
+Match Result: 1 0 0 2 15 5 0 0 371 107 297 96
+Match Result: 1 0 1 0 10 10 0 0 116 214 285 209
+Match Result: 1 0 1 1 12 8 0 0 162 120 215 144
+Match Result: 1 0 1 2 13 7 0 0 189 145 317 97
+Match Result: 1 0 2 0 7 13 0 0 146 330 131 231
+Match Result: 1 0 2 1 14 6 0 0 272 86 221 144
+Match Result: 1 0 2 2 14 6 0 0 287 115 280 108
+Match Result: 1 2 0 0 9 11 0 0 233 303 107 198
+Match Result: 1 2 0 1 17 3 0 0 361 52 366 63
+Match Result: 1 2 0 2 12 8 0 0 290 192 221 146
+Match Result: 1 2 1 0 5 15 0 0 63 320 146 353
+Match Result: 1 2 1 1 16 4 0 0 216 58 272 61
+Match Result: 1 2 1 2 19 1 0 0 255 18 513 20
+Match Result: 1 2 2 0 6 14 0 0 125 362 127 294
+Match Result: 1 2 2 1 12 8 0 0 209 102 174 190
+Match Result: 1 2 2 2 17 3 0 0 364 67 355 50
+Match Result: 2 0 0 0 11 9 0 0 298 264 170 114
+Match Result: 2 0 0 1 14 6 0 0 292 94 321 121
+Match Result: 2 0 0 2 12 8 0 0 312 212 203 115
+Match Result: 2 0 1 0 12 8 0 0 150 168 349 144
+Match Result: 2 0 1 1 10 10 0 0 122 132 187 150
+Match Result: 2 0 1 2 14 6 0 0 208 108 282 51
+Match Result: 2 0 2 0 11 9 0 0 253 247 185 164
+Match Result: 2 0 2 1 6 14 0 0 114 208 106 299
+Match Result: 2 0 2 2 13 7 0 0 261 145 265 138
+Match Result: 2 1 0 0 9 11 0 0 253 305 142 153
+Match Result: 2 1 0 1 15 5 0 0 325 80 322 111
+Match Result: 2 1 0 2 13 7 0 0 320 172 293 109
+Match Result: 2 1 1 0 13 7 0 0 191 166 358 100
+Match Result: 2 1 1 1 8 12 0 0 112 170 179 173
+Match Result: 2 1 1 2 16 4 0 0 216 74 386 42
+Match Result: 2 1 2 0 11 9 0 0 276 248 204 176
+Match Result: 2 1 2 1 13 7 0 0 277 114 233 135
+Match Result: 2 1 2 2 11 9 0 0 254 206 208 158

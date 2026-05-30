@@ -1,22 +1,25 @@
-Tournament: MPA21Depth-subphase2 – 2026-05-23 18:46:48
+Tournament: Phase2 – 2026-05-25 09:56:21
 Runs: 1 | Games per matchup: 1000 | Threads: 12
-Agents: MPA21Depth-best-coev-1, MPA21Depth-best-shade-like-2, MPA21Depth-best-shade-pure-3
+Agents: ParametricBase-best-shade-like-2, MPA63-best-shade-like-2, MPA63Smooth-best-shade-like-2, MPA28-best-shade-like-2, MPA28Norm-best-shade-like-2, MPA21Depth-best-shade-pure-3
 ============================================================
 
 ────────────────────────────────────────────────────────────
 RUN 1/1
 ────────────────────────────────────────────────────────────
-Run 1 done in 20218.9s | Total games: 54000
+Run 1 done in 29998.6s | Total games: 270000
 
 ============================================================
-AGGREGATED SUMMARY – MPA21Depth-subphase2 (1 run(s))
+AGGREGATED SUMMARY – Phase2 (1 run(s))
 ============================================================
 Agent                                        Wins    Games     Win%
 ------------------------------------------------------------
-MPA21Depth-best-coev-1                      16783    36000   46.62%
-MPA21Depth-best-shade-like-2                18055    36000   50.15%
-MPA21Depth-best-shade-pure-3                19162    36000   53.23%
+ParametricBase-best-shade-like-2            41878    90000   46.53%
+MPA63-best-shade-like-2                     41715    90000   46.35%
+MPA63Smooth-best-shade-like-2               43036    90000   47.82%
+MPA28-best-shade-like-2                     45495    90000   50.55%
+MPA28Norm-best-shade-like-2                 42953    90000   47.73%
+MPA21Depth-best-shade-pure-3                54923    90000   61.03%
 ------------------------------------------------------------
-Total wall time : 20218.9s
-Avg  per run    : 20218.9s
+Total wall time : 29998.6s
+Avg  per run    : 29998.6s
 ============================================================

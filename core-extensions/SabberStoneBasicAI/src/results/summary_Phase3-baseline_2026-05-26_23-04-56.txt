@@ -1,0 +1,27 @@
+Tournament: Phase3-baseline – 2026-05-26 23:04:59
+Runs: 1 | Games per matchup: 1000 | Threads: 12
+Agents: ParametricGreedyBaseline, MyAgentSebastianMiller2Naive
+============================================================
+
+────────────────────────────────────────────────────────────
+RUN 1/1
+────────────────────────────────────────────────────────────
+Run 1 done in 174825.7s | Total games: 18000
+Detailed report (txt): details_run_Phase3-baseline_r1_2026-05-26_23-04-56.txt
+Detailed report (tex): details_run_Phase3-baseline_r1_2026-05-26_23-04-56.tex
+Heatmap report (tex): heatmap_run_Phase3-baseline_r1_2026-05-26_23-04-56.tex
+Dominance graph (tex): dominance_run_Phase3-baseline_r1_2026-05-26_23-04-56.tex
+Deck sensitivity (tex): deck_sensitivity_run_Phase3-baseline_r1_2026-05-26_23-04-56.tex
+Polarization index (tex): polarization_run_Phase3-baseline_r1_2026-05-26_23-04-56.tex
+
+============================================================
+AGGREGATED SUMMARY – Phase3-baseline (1 run(s))
+============================================================
+Agent                                        Wins    Games     Win%
+------------------------------------------------------------
+ParametricGreedyBaseline                     6249    18000   34.72%
+MyAgentSebastianMiller2Naive                11751    18000   65.28%
+------------------------------------------------------------
+Total wall time : 174825.7s
+Avg  per run    : 174825.7s
+============================================================

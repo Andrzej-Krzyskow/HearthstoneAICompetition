@@ -1,0 +1,28 @@
+Tournament: Phase3 – 2026-05-25 22:15:38
+Runs: 1 | Games per matchup: 20 | Threads: 12
+Agents: MPA21Depth-best-shade-pure-3, MyAgentSebastianMiller2Naive, GretiveComp
+============================================================
+
+────────────────────────────────────────────────────────────
+RUN 1/1
+────────────────────────────────────────────────────────────
+Run 1 done in 2725.0s | Total games: 1080
+Detailed report (txt): details_run_Phase3_r1_2026-05-25_22-15-36.txt
+Detailed report (tex): details_run_Phase3_r1_2026-05-25_22-15-36.tex
+Heatmap report (tex): heatmap_run_Phase3_r1_2026-05-25_22-15-36.tex
+Dominance graph (tex): dominance_run_Phase3_r1_2026-05-25_22-15-36.tex
+Deck sensitivity (tex): deck_sensitivity_run_Phase3_r1_2026-05-25_22-15-36.tex
+Polarization index (tex): polarization_run_Phase3_r1_2026-05-25_22-15-36.tex
+
+============================================================
+AGGREGATED SUMMARY – Phase3 (1 run(s))
+============================================================
+Agent                                        Wins    Games     Win%
+------------------------------------------------------------
+MPA21Depth-best-shade-pure-3                  332      720   46.11%
+MyAgentSebastianMiller2Naive                  388      720   53.89%
+GretiveComp                                   360      720   50.00%
+------------------------------------------------------------
+Total wall time : 2725.0s
+Avg  per run    : 2725.0s
+============================================================

@@ -1,22 +1,27 @@
-Tournament: MPA21Depth-subphase2 – 2026-05-23 18:46:48
+Tournament: Phase3 – 2026-05-25 23:19:23
 Runs: 1 | Games per matchup: 1000 | Threads: 12
-Agents: MPA21Depth-best-coev-1, MPA21Depth-best-shade-like-2, MPA21Depth-best-shade-pure-3
+Agents: MPA21Depth-best-shade-pure-3, MyAgentSebastianMiller2Naive
 ============================================================
 
 ────────────────────────────────────────────────────────────
 RUN 1/1
 ────────────────────────────────────────────────────────────
-Run 1 done in 20218.9s | Total games: 54000
+Run 1 done in 51971.2s | Total games: 18000
+Detailed report (txt): details_run_Phase3_r1_2026-05-25_23-19-21.txt
+Detailed report (tex): details_run_Phase3_r1_2026-05-25_23-19-21.tex
+Heatmap report (tex): heatmap_run_Phase3_r1_2026-05-25_23-19-21.tex
+Dominance graph (tex): dominance_run_Phase3_r1_2026-05-25_23-19-21.tex
+Deck sensitivity (tex): deck_sensitivity_run_Phase3_r1_2026-05-25_23-19-21.tex
+Polarization index (tex): polarization_run_Phase3_r1_2026-05-25_23-19-21.tex
 
 ============================================================
-AGGREGATED SUMMARY – MPA21Depth-subphase2 (1 run(s))
+AGGREGATED SUMMARY – Phase3 (1 run(s))
 ============================================================
 Agent                                        Wins    Games     Win%
 ------------------------------------------------------------
-MPA21Depth-best-coev-1                      16783    36000   46.62%
-MPA21Depth-best-shade-like-2                18055    36000   50.15%
-MPA21Depth-best-shade-pure-3                19162    36000   53.23%
+MPA21Depth-best-shade-pure-3                 8525    18000   47.36%
+MyAgentSebastianMiller2Naive                 9475    18000   52.64%
 ------------------------------------------------------------
-Total wall time : 20218.9s
-Avg  per run    : 20218.9s
+Total wall time : 51971.2s
+Avg  per run    : 51971.2s
 ============================================================

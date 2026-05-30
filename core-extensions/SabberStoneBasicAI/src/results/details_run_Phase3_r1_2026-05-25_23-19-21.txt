@@ -1,0 +1,30 @@
+Detailed report: run_Phase3_r1_2026-05-25_23-19-21
+Competition type: RoundRobin_DeckPlaying
+Agents: 2 | Decks: 3
+==========================================================================================
+
+AGENT LABELS (SHORT -> FULL THESIS NAME)
+------------------------------------------------------------------------------------------
+21 glebokosciowy         -> Wariant 21 parametrow z przeszukiwaniem glebokosciowym
+MyAgentSebastianMiller2Naive -> MyAgentSebastianMiller2Naive
+
+PAIRWISE (ALL DECKS AGGREGATED)
+------------------------------------------------------------------------------------------
+Agent A                                  Agent B                                   WinsA  WinsB  Games    WR_A
+------------------------------------------------------------------------------------------
+21 glebokosciowy                         MyAgentSebastianMiller2Naive               8525   9475  18000  47.36%
+
+DECK x DECK BREAKDOWN FOR EACH AGENT PAIR
+------------------------------------------------------------------------------------------
+21 glebokosciowy  VS  MyAgentSebastianMiller2Naive
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  845   1155   2000  42.25%
+Mage               Warrior              1458    542   2000  72.90%
+Mage               Shaman               1102    898   2000  55.10%
+Warrior            Mage                  537   1463   2000  26.85%
+Warrior            Warrior               850   1150   2000  42.50%
+Warrior            Shaman                900   1100   2000  45.00%
+Shaman             Mage                  861   1139   2000  43.05%
+Shaman             Warrior              1037    963   2000  51.85%
+Shaman             Shaman                935   1065   2000  46.75%
+------------------------------------------------------------------------------------------

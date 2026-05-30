@@ -1,0 +1,30 @@
+Detailed report: run_Phase3-baseline_r1_2026-05-26_23-04-56
+Competition type: RoundRobin_DeckPlaying
+Agents: 2 | Decks: 3
+==========================================================================================
+
+AGENT LABELS (SHORT -> FULL THESIS NAME)
+------------------------------------------------------------------------------------------
+ParametricGreedyBaseline -> ParametricGreedyBaseline
+MyAgentSebastianMiller2Naive -> MyAgentSebastianMiller2Naive
+
+PAIRWISE (ALL DECKS AGGREGATED)
+------------------------------------------------------------------------------------------
+Agent A                                  Agent B                                   WinsA  WinsB  Games    WR_A
+------------------------------------------------------------------------------------------
+ParametricGreedyBaseline                 MyAgentSebastianMiller2Naive               6249  11751  18000  34.72%
+
+DECK x DECK BREAKDOWN FOR EACH AGENT PAIR
+------------------------------------------------------------------------------------------
+ParametricGreedyBaseline  VS  MyAgentSebastianMiller2Naive
+Deck A             Deck B              WinsA  WinsB  Games    WR_A
+Mage               Mage                  689   1311   2000  34.45%
+Mage               Warrior              1186    814   2000  59.30%
+Mage               Shaman                783   1217   2000  39.15%
+Warrior            Mage                  352   1648   2000  17.60%
+Warrior            Warrior               539   1461   2000  26.95%
+Warrior            Shaman                655   1345   2000  32.75%
+Shaman             Mage                  627   1373   2000  31.35%
+Shaman             Warrior               778   1222   2000  38.90%
+Shaman             Shaman                640   1360   2000  32.00%
+------------------------------------------------------------------------------------------
